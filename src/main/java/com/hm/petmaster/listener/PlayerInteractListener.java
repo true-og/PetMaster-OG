@@ -1,9 +1,9 @@
 package com.hm.petmaster.listener;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.hm.mcshared.event.PlayerChangeAnimalOwnershipEvent;
 import com.hm.petmaster.PetMaster;
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.milkbowl.vault.economy.Economy;
@@ -20,12 +20,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Class used to display holograms, change the owner of a pet or free a pet.
- * 
+ *
  * @author Pyves
  *
  */
@@ -85,13 +85,13 @@ public class PlayerInteractListener implements Listener {
 		showHealth = plugin.getPluginConfig().getBoolean("showHealth", true);
 		disableRiding = plugin.getPluginConfig().getBoolean("disableRiding", false);
 
-		boolean holographicDisplaysAvailable = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
+		boolean decentHologramsAvailable = Bukkit.getPluginManager().isPluginEnabled("DecentHolograms");
 		// Checking whether user configured plugin to display hologram but HolographicsDisplays not available.
-		if (hologramMessage && !holographicDisplaysAvailable) {
+		if (hologramMessage && !decentHologramsAvailable) {
 			hologramMessage = false;
 			actionBarMessage = true;
 			plugin.getLogger().warning(
-					"HolographicDisplays was not found; disabling usage of holograms and enabling action bar messages.");
+					"DecentHolograms was not found; disabling usage of holograms and enabling action bar messages.");
 		}
 	}
 
@@ -135,7 +135,7 @@ public class PlayerInteractListener implements Listener {
 
 	/**
 	 * Determines whether the current PlayerInteractEntityEvent should be handled.
-	 * 
+	 *
 	 * @param event
 	 * @return true if the event should be handled, false otherwise
 	 */
@@ -147,7 +147,7 @@ public class PlayerInteractListener implements Listener {
 
 	/**
 	 * Change the owner of a pet.
-	 * 
+	 *
 	 * @param player
 	 * @param oldOwner
 	 * @param newOwner
@@ -161,7 +161,7 @@ public class PlayerInteractListener implements Listener {
 					+ plugin.getPluginLang().getString("owner-changed", "This pet was given to a new owner!"));
 			newOwner.sendMessage(plugin.getChatHeader()
 					+ plugin.getPluginLang().getString("new-owner", "Player PLAYER gave you ownership of a pet!")
-							.replace("PLAYER", player.getName()));
+					.replace("PLAYER", oldOwner.getName()));
 
 			// Create new event to allow other plugins to be aware of the ownership change.
 			PlayerChangeAnimalOwnershipEvent playerChangeAnimalOwnershipEvent = new PlayerChangeAnimalOwnershipEvent(
@@ -172,7 +172,7 @@ public class PlayerInteractListener implements Listener {
 
 	/**
 	 * Frees a pet; it will no longer be tamed.
-	 * 
+	 *
 	 * @param player
 	 * @param oldOwner
 	 * @param tameable
@@ -207,7 +207,7 @@ public class PlayerInteractListener implements Listener {
 
 	/**
 	 * Displays a hologram, and automatically delete it after a given delay.
-	 * 
+	 *
 	 * @param player
 	 * @param owner
 	 * @param tameable
@@ -248,19 +248,29 @@ public class PlayerInteractListener implements Listener {
 			Location hologramLocation = new Location(eventLocation.getWorld(), eventLocation.getX(),
 					eventLocation.getY() + offset, eventLocation.getZ());
 
-			final Hologram hologram = HologramsAPI.createHologram(plugin, hologramLocation);
-			hologram.appendTextLine(plugin.getMessageSender().parseMessageToString(
+
+			String hologramname = player.getUniqueId() + "_pm";
+
+			List<String> lines = Collections.singletonList(plugin.getMessageSender().parseMessageToString(
 					"petmaster-hologram",
 					Placeholder.component("owner", Component.text(owner.getName() != null ? owner.getName() : "null"))
 			));
 
+			if (DHAPI.getHologram(hologramname) == null) {
+				Hologram hologram = DHAPI.createHologram(hologramname, hologramLocation, lines);
+			} else {
+				return;
+			}
+
+
 			// Runnable to delete hologram.
+
 			new BukkitRunnable() {
 
 				@Override
 				public void run() {
 
-					hologram.delete();
+					DHAPI.removeHologram(hologramname);
 				}
 			}.runTaskLater(plugin, hologramDuration);
 		}
@@ -274,7 +284,7 @@ public class PlayerInteractListener implements Listener {
 					Placeholder.component("current-health", Component.text(String.format("%.1f", animal.getHealth()))),
 					Placeholder.component("max-health", Component.text(
 							plugin.getServerVersion() < 9 ? String.format("%.1f", animal.getMaxHealth())
-							: String.format("%.1f", animal.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())))
+									: String.format("%.1f", animal.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())))
 			);
 		}
 
@@ -303,7 +313,7 @@ public class PlayerInteractListener implements Listener {
 
 	/**
 	 * Charges a player if he has enough money and displays relevant messages.
-	 * 
+	 *
 	 * @param player
 	 * @param price
 	 * @return true if money should be withdrawn from the player, false otherwise

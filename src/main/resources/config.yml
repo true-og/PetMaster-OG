@@ -14,11 +14,11 @@
 # |                    General  settings                    | #
 # 2---------------------------------------------------------2 #
 #=============================o=o=============================#
-  
+
 # Enable or disable chat messages when right-clicking on a pet.
 chatMessage: false
 
-# Enable or disable hologram messages when right-clicking on a pet (requires Holographic Displays).
+# Enable or disable hologram messages when right-clicking on a pet (requires DecentHolograms).
 hologramMessage: false
 
 # Enable or disable action bar messages when right-clicking on a pet.

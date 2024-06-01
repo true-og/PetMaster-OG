@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * Class in charge of displaying the plugin's extra information (/petm info).
- * 
+ *
  * @author Pyves
- * 
+ *
  */
 public class InfoCommand {
 
@@ -25,7 +25,7 @@ public class InfoCommand {
 
 	/**
 	 * Displays information about the plugin.
-	 * 
+	 *
 	 * @param sender
 	 */
 	public void getInfo(CommandSender sender) {

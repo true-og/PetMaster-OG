@@ -11,9 +11,9 @@ import com.hm.petmaster.PetMaster;
 
 /**
  * Class in charge of handling player requests to change ownership of a pet (/petm setowner).
- * 
+ *
  * @author Pyves
- * 
+ *
  */
 public class SetOwnerCommand {
 

@@ -25,16 +25,16 @@ import java.util.logging.Level;
 
 /**
  * Manage pets and display useful information via holograms, action bar or chat messages!
- * 
+ *
  * PetMaster is under GNU General Public License version 3. Please visit the plugin's GitHub for more information :
  * https://github.com/PyvesB/PetMaster
  *
  * Official plugin's server: hellominecraft.fr
- * 
+ *
  * Bukkit project page: dev.bukkit.org/bukkit-plugins/pet-master
- * 
+ *
  * Spigot project page: spigotmc.org/resources/pet-master.15904
- * 
+ *
  * @since December 2015.
  * @version 1.12.5
  * @author DarkPyves
@@ -96,10 +96,12 @@ public class PetMaster extends JavaPlugin {
 		this.adventure = BukkitAudiences.create(this);
 		this.messageSender = new MessageSender(this);
 
+		getLogger().info("Server version..." + Bukkit.getServer().getBukkitVersion());
+		getLogger().info("Registered subVersion..." + Bukkit.getServer().getBukkitVersion().replace(".", ",").split(",")[1].split("-")[0]);
 		getLogger().info("Registering listeners...");
-		
+
 		serverVersion = Integer.parseInt(
-				Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3].split("_")[1]);
+				Bukkit.getServer().getBukkitVersion().replace(".", ",").split(",")[1].split("-")[0]);
 
 		playerInteractListener = new PlayerInteractListener(this);
 		playerLeashListener = new PlayerLeashListener(this);
@@ -118,7 +120,7 @@ public class PetMaster extends JavaPlugin {
 		}
 
 		extractParametersFromConfig(true);
-		
+
 		PetAbilityFile.petAbilitySetup();
 		PetAbilityFile.getPetAbilities().options().copyDefaults(true);
 		PetAbilityFile.petAbilitySave();
@@ -175,7 +177,7 @@ public class PetMaster extends JavaPlugin {
 		if (config.getBoolean("checkForUpdate", true)) {
 			if (updateChecker == null) {
 				updateChecker = new UpdateChecker(this, "https://raw.githubusercontent.com/PyvesB/PetMaster/master/pom.xml",
-					"petmaster.admin", chatHeader, "spigotmc.org/resources/pet-master.15904");
+						"petmaster.admin", chatHeader, "spigotmc.org/resources/pet-master.15904");
 				getServer().getPluginManager().registerEvents(updateChecker, this);
 				updateChecker.launchUpdateCheckerTask();
 			}
@@ -201,7 +203,7 @@ public class PetMaster extends JavaPlugin {
 
 	/**
 	 * Loads and backs up file fileName.
-	 * 
+	 *
 	 * @param fileName
 	 * @return the loaded CommentedYamlConfiguration
 	 */
@@ -212,7 +214,7 @@ public class PetMaster extends JavaPlugin {
 		} catch (IOException | InvalidConfigurationException e) {
 			getLogger().severe("Error while loading " + fileName + " file, disabling plugin.");
 			getLogger().log(Level.SEVERE,
-				"Verify your syntax by visiting yaml-online-parser.appspot.com and using the following logs: ", e);
+					"Verify your syntax by visiting yaml-online-parser.appspot.com and using the following logs: ", e);
 			getServer().getPluginManager().disablePlugin(this);
 		}
 
@@ -233,7 +235,7 @@ public class PetMaster extends JavaPlugin {
 
 		updateSetting(config, "languageFileName", "lang.yml", "Name of the language file.");
 		updateSetting(config, "checkForUpdate", true,
-			"Check for update on plugin launch and notify when an OP joins the game.");
+				"Check for update on plugin launch and notify when an OP joins the game.");
 		updateSetting(config, "changeOwnerPrice", 0, "Price of the /petm setowner command (requires Vault).");
 		updateSetting(config, "displayDog", true, "Take dogs into account.");
 		updateSetting(config, "displayCat", true, "Take cats into account.");
@@ -241,15 +243,15 @@ public class PetMaster extends JavaPlugin {
 		updateSetting(config, "displayLlama", true, "Take llamas into account.");
 		updateSetting(config, "displayParrot", true, "Take parrots into account.");
 		updateSetting(config, "actionBarMessage", false,
-			"Enable or disable action bar messages when right-clicking on a pet.");
+				"Enable or disable action bar messages when right-clicking on a pet.");
 		updateSetting(config, "displayToOwner", false,
-			"Enable or disable showing ownership information for a player's own pets.");
+				"Enable or disable showing ownership information for a player's own pets.");
 		updateSetting(config, "freePetPrice", 0, "Price of the /petm free command (requires Vault).");
 		updateSetting(config, "showHealth", true,
-			"Show health next to owner in chat and action bar messages (not holograms).");
+				"Show health next to owner in chat and action bar messages (not holograms).");
 		updateSetting(config, "disablePlayerDamage", false, "Protect pets to avoid being hurt by other player.");
 		updateSetting(config, "enableAngryMobPlayerDamage", true,
-			"Allows players to defend themselves against angry tamed mobs (e.g. dogs) even if disablePlayerDamage is true.");
+				"Allows players to defend themselves against angry tamed mobs (e.g. dogs) even if disablePlayerDamage is true.");
 		updateSetting(config, "disableLeash", false, "Prevent others from using leash on pet.");
 		updateSetting(config, "disableRiding", false, "Prevent others from mounting pet (horse/donkey).");
 
@@ -337,7 +339,7 @@ public class PetMaster extends JavaPlugin {
 
 	/**
 	 * Updates the configuration file to include a new setting with its default value and its comments.
-	 * 
+	 *
 	 * @param file
 	 * @param name
 	 * @param value
@@ -349,7 +351,7 @@ public class PetMaster extends JavaPlugin {
 			updatePerformed = true;
 		}
 	}
-	
+
 	public int getServerVersion() {
 		return serverVersion;
 	}

@@ -5,7 +5,7 @@ author: DarkPyves
 softdepend: [HolographicDisplays,Vault]
 description: Manage pets and display useful information via holograms, action bar or chat messages!
 website: https://github.com/PyvesB/PetMaster
-api-version: 1.13
+api-version: 1.20
 commands:
   petm:
     description: Main Pet Master command, use it to list sub-commands.
