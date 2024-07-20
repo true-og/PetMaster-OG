@@ -1,12 +1,9 @@
 package com.hm.petmaster;
 
-import com.hm.mcshared.file.CommentedYamlConfiguration;
-import com.hm.mcshared.update.UpdateChecker;
-import com.hm.petmaster.command.*;
-import com.hm.petmaster.files.PetAbilityFile;
-import com.hm.petmaster.listener.*;
-import com.hm.petmaster.utils.MessageSender;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,9 +16,28 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
+import com.hm.mcshared.file.CommentedYamlConfiguration;
+import com.hm.petmaster.command.EnableDisableCommand;
+import com.hm.petmaster.command.FreeCommand;
+import com.hm.petmaster.command.HelpCommand;
+import com.hm.petmaster.command.InfoCommand;
+import com.hm.petmaster.command.PetInvincibleCommand;
+import com.hm.petmaster.command.PetSkillCommand;
+import com.hm.petmaster.command.ReloadCommand;
+import com.hm.petmaster.command.SetColorCommand;
+import com.hm.petmaster.command.SetOwnerCommand;
+import com.hm.petmaster.command.ShareCommand;
+import com.hm.petmaster.files.PetAbilityFile;
+import com.hm.petmaster.listener.PlayerAttackListener;
+import com.hm.petmaster.listener.PlayerBreedListener;
+import com.hm.petmaster.listener.PlayerInteractListener;
+import com.hm.petmaster.listener.PlayerLeashListener;
+import com.hm.petmaster.listener.PlayerQuitListener;
+import com.hm.petmaster.listener.PlayerTameListener;
+import com.hm.petmaster.utils.MessageSender;
+
+import eu.decentsoftware.holograms.api.utils.UpdateChecker;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 
 /**
  * Manage pets and display useful information via holograms, action bar or chat messages!

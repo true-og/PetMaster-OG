@@ -1,0 +1,6 @@
+[submodule "libs/Utilities-OG"]
+	path = libs/Utilities-OG
+	url = https://github.com/NotAlexNoyle/Utilities-OG
+[submodule "libs/MCShared-OG"]
+	path = libs/MCShared-OG
+	url = https://github.com/NotAlexNoyle/MCShared-OG
