@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -36,8 +34,9 @@ import com.hm.petmaster.listener.PlayerQuitListener;
 import com.hm.petmaster.listener.PlayerTameListener;
 import com.hm.petmaster.utils.MessageSender;
 
-import eu.decentsoftware.holograms.api.utils.UpdateChecker;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
 /**
  * Manage pets and display useful information via holograms, action bar or chat messages!
@@ -58,8 +57,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 public class PetMaster extends JavaPlugin {
 
 	// Plugin options and various parameters.
-	private String chatHeader;
-	private boolean updatePerformed;
+	private TextComponent chatHeader;
 	private int serverVersion;
 
 	// Fields related to file handling.
@@ -74,9 +72,6 @@ public class PetMaster extends JavaPlugin {
 	private PlayerTameListener playerTameListener;
 	private PlayerBreedListener playerBreedListener;
 
-	// Used to check for plugin updates.
-	private UpdateChecker updateChecker;
-
 	// Additional classes related to plugin commands.
 	private HelpCommand helpCommand;
 	private InfoCommand infoCommand;
@@ -89,7 +84,7 @@ public class PetMaster extends JavaPlugin {
 	private PetInvincibleCommand petInvincibleCommand;
 	private PetSkillCommand petSkillCommand;
 
-	//Messageing System
+	// Messaging System.
 	private BukkitAudiences adventure;
 	private MessageSender messageSender;
 
@@ -141,7 +136,7 @@ public class PetMaster extends JavaPlugin {
 		PetAbilityFile.getPetAbilities().options().copyDefaults(true);
 		PetAbilityFile.petAbilitySave();
 
-		chatHeader = ChatColor.GRAY + "[" + ChatColor.GOLD + "\u265E" + ChatColor.GRAY + "] ";
+		chatHeader = Component.text("<gray>[<gold>\u25b2<gray>]");
 
 		File playerColorConfig = new File(getDataFolder() + File.separator + "playersettings.yml");
 
@@ -181,26 +176,8 @@ public class PetMaster extends JavaPlugin {
 			return;
 		}
 
-		// Update configurations from previous versions of the plugin if server reloads or restarts.
-		if (attemptUpdate) {
-			updateOldConfiguration();
-			updateOldLanguage();
-		}
-
 		playerInteractListener.extractParameters();
 		playerLeashListener.extractParameters();
-
-		if (config.getBoolean("checkForUpdate", true)) {
-			if (updateChecker == null) {
-				updateChecker = new UpdateChecker(this, "https://raw.githubusercontent.com/PyvesB/PetMaster/master/pom.xml",
-						"petmaster.admin", chatHeader, "spigotmc.org/resources/pet-master.15904");
-				getServer().getPluginManager().registerEvents(updateChecker, this);
-				updateChecker.launchUpdateCheckerTask();
-			}
-		} else {
-			PlayerJoinEvent.getHandlerList().unregister(updateChecker);
-			updateChecker = null;
-		}
 
 		if (config.getBoolean("disablePlayerDamage", false)) {
 			if (playerAttackListener == null) {
@@ -240,67 +217,6 @@ public class PetMaster extends JavaPlugin {
 			getLogger().log(Level.SEVERE, "Error while backing up configuration file: ", e);
 		}
 		return yamlConfiguration;
-	}
-
-	/**
-	 * Updates configuration file from older plugin versions by adding missing parameters. Upgrades from versions prior
-	 * to 1.2 are not supported.
-	 */
-	private void updateOldConfiguration() {
-		updatePerformed = false;
-
-		updateSetting(config, "languageFileName", "lang.yml", "Name of the language file.");
-		updateSetting(config, "checkForUpdate", true,
-				"Check for update on plugin launch and notify when an OP joins the game.");
-		updateSetting(config, "changeOwnerPrice", 0, "Price of the /petm setowner command (requires Vault).");
-		updateSetting(config, "displayDog", true, "Take dogs into account.");
-		updateSetting(config, "displayCat", true, "Take cats into account.");
-		updateSetting(config, "displayHorse", true, "Take horses into account.");
-		updateSetting(config, "displayLlama", true, "Take llamas into account.");
-		updateSetting(config, "displayParrot", true, "Take parrots into account.");
-		updateSetting(config, "actionBarMessage", false,
-				"Enable or disable action bar messages when right-clicking on a pet.");
-		updateSetting(config, "displayToOwner", false,
-				"Enable or disable showing ownership information for a player's own pets.");
-		updateSetting(config, "freePetPrice", 0, "Price of the /petm free command (requires Vault).");
-		updateSetting(config, "showHealth", true,
-				"Show health next to owner in chat and action bar messages (not holograms).");
-		updateSetting(config, "disablePlayerDamage", false, "Protect pets to avoid being hurt by other player.");
-		updateSetting(config, "enableAngryMobPlayerDamage", true,
-				"Allows players to defend themselves against angry tamed mobs (e.g. dogs) even if disablePlayerDamage is true.");
-		updateSetting(config, "disableLeash", false, "Prevent others from using leash on pet.");
-		updateSetting(config, "disableRiding", false, "Prevent others from mounting pet (horse/donkey).");
-
-		if (updatePerformed) {
-			// Changes in the configuration: save and do a fresh load.
-			try {
-				config.saveConfiguration();
-				config.loadConfiguration();
-			} catch (IOException | InvalidConfigurationException e) {
-				getLogger().log(Level.SEVERE, "Error while saving changes to the configuration file: ", e);
-			}
-		}
-	}
-
-	/**
-	 * Updates language file from older plugin versions by adding missing parameters. Upgrades from versions prior to
-	 * 1.2 are not supported.
-	 */
-	private void updateOldLanguage() {
-		updatePerformed = false;
-
-		updateSetting(lang, "petmaster-help-header", "<prefix> <gold>------------------ ♞<bold>PetMaster</bold>♞  ------------------");
-		updateSetting(lang, "petmaster-prefix", "<gray>[<gold>♞<gray>] ");
-
-		if (updatePerformed) {
-			// Changes in the language file: save and do a fresh load.
-			try {
-				lang.saveConfiguration();
-				lang.loadConfiguration();
-			} catch (IOException | InvalidConfigurationException e) {
-				getLogger().log(Level.SEVERE, "Error while saving changes to the language file: ", e);
-			}
-		}
 	}
 
 	/**
@@ -353,27 +269,11 @@ public class PetMaster extends JavaPlugin {
 		return true;
 	}
 
-	/**
-	 * Updates the configuration file to include a new setting with its default value and its comments.
-	 *
-	 * @param file
-	 * @param name
-	 * @param value
-	 * @param comments
-	 */
-	private void updateSetting(CommentedYamlConfiguration file, String name, Object value, String... comments) {
-		if (!file.getKeys(false).contains(name)) {
-			file.set(name, value, comments);
-			updatePerformed = true;
-		}
-	}
-
 	public int getServerVersion() {
 		return serverVersion;
 	}
 
-	@Deprecated
-	public String getChatHeader() {
+	public TextComponent getChatHeader() {
 		return chatHeader;
 	}
 
@@ -404,4 +304,5 @@ public class PetMaster extends JavaPlugin {
 	public MessageSender getMessageSender(){
 		return messageSender;
 	}
+
 }

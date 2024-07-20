@@ -1,10 +1,7 @@
 package com.hm.petmaster.command;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import com.hm.mcshared.particle.FancyMessageSender;
 import com.hm.petmaster.PetMaster;
 
 /**
@@ -43,7 +40,7 @@ public class HelpCommand {
 		if (sender.hasPermission("petmaster.setowner")) {
 			plugin.getMessageSender().sendMessage(sender, "petmaster-command-setowner");
 		}
-		
+
 		if (sender.hasPermission("petmaster.setcolor")) {
 			plugin.getMessageSender().sendMessage(sender, "petmaster-command-setcolor");
 		}
@@ -54,4 +51,5 @@ public class HelpCommand {
 		// Tip message.
 		plugin.getMessageSender().sendMessage(sender, "petmaster-tip");
 	}
+
 }

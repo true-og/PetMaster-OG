@@ -1,6 +1,5 @@
 package com.hm.petmaster.listener;
 
-import com.hm.petmaster.PetMaster;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.EntityType;
@@ -9,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTameEvent;
+
+import com.hm.petmaster.PetMaster;
 
 public class PlayerTameListener implements Listener {
 

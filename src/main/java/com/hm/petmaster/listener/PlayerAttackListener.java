@@ -39,14 +39,14 @@ public class PlayerAttackListener implements Listener {
 
 		Entity damager = event.getDamager();
 		Entity damaged = event.getEntity();
-		if (!isDamagerProjectileOrPlayer(damager) || !isDamagedOwned(damaged)) {
+		if (! isDamagerProjectileOrPlayer(damager) || ! isDamagedOwned(damaged)) {
 			return;
 		}
 		if (damager instanceof Projectile) {
 			damager = (Entity) ((Projectile) damager).getShooter();
 		}
 		if (isDamagerPlayerDifferentFromDamagedOwner(damager, damaged)) {
-			event.setCancelled(!enableAngryMobPlayerDamage || !isDamagedTargettingDamager(damager, damaged));
+			event.setCancelled(! enableAngryMobPlayerDamage || ! isDamagedTargettingDamager(damager, damaged));
 		}
 	}
 
@@ -59,7 +59,7 @@ public class PlayerAttackListener implements Listener {
 	}
 
 	private boolean isDamagerPlayerDifferentFromDamagedOwner(Entity damager, Entity damaged) {
-		return damager instanceof Player && !((Tameable) damaged).getOwner().getUniqueId().equals(damager.getUniqueId());
+		return damager instanceof Player && ! ((Tameable) damaged).getOwner().getUniqueId().equals(damager.getUniqueId());
 	}
 
 	private boolean isDamagedTargettingDamager(Entity damager, Entity damaged) {
@@ -69,4 +69,5 @@ public class PlayerAttackListener implements Listener {
 		}
 		return false;
 	}
+
 }

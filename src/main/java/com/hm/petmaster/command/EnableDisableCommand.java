@@ -36,4 +36,5 @@ public class EnableDisableCommand {
 	public boolean isDisabled() {
 		return disabled;
 	}
+
 }

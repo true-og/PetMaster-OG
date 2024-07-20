@@ -37,11 +37,11 @@ public class SetOwnerCommand {
 			}
 			if (newOwner == null) {
 				plugin.getMessageSender().sendMessage(player, "player-offline");
-			} else if (!player.hasPermission("petmaster.setowner")) {
+			} else if (! player.hasPermission("petmaster.setowner")) {
 				plugin.getMessageSender().sendMessage(player, "no-permissions");
 			} else if (plugin.getEnableDisableCommand().isDisabled()) {
 				plugin.getMessageSender().sendMessage(player, "currently-disabled");
-			} else if (!player.hasPermission("petmaster.admin") && newOwner.getUniqueId().equals(player.getUniqueId())) {
+			} else if (! player.hasPermission("petmaster.admin") && newOwner.getUniqueId().equals(player.getUniqueId())) {
 				plugin.getMessageSender().sendMessage(player, "cannot-change-to-yourself");
 			} else {
 				changeOwnershipMap.put(player.getUniqueId(), newOwner);
@@ -57,4 +57,5 @@ public class SetOwnerCommand {
 	public Player collectPendingSetOwnershipRequest(Player player) {
 		return changeOwnershipMap.remove(player.getUniqueId());
 	}
+
 }

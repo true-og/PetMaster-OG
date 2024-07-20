@@ -1,33 +1,30 @@
 package com.hm.petmaster.command;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.hm.petmaster.PetMaster;
 
-import net.md_5.bungee.api.ChatColor;
+import me.barny1094875.utilitiesog.UtilitiesOG;
 
 public class ShareCommand {
+
 	PetMaster plugin = PetMaster.getPlugin(PetMaster.class);
-	
+
 	public ShareCommand(PetMaster petMaster) {
 		this.plugin = petMaster;
 	}
-	
+
 	public void sharePetCommand(CommandSender sender) {
 		Player player = (Player) sender;
-		player.sendMessage(" ");
-		player.sendMessage(ChatColor.LIGHT_PURPLE +"#-------------------------#");
-		player.sendMessage(ChatColor.LIGHT_PURPLE +"#  PetMaster Dev Note           #");
-		player.sendMessage(ChatColor.LIGHT_PURPLE +"#-------------------------#");
-		player.sendMessage(plugin.getChatHeader() + ChatColor.LIGHT_PURPLE +" This is a test feature!");
-		player.sendMessage(plugin.getChatHeader() + ChatColor.LIGHT_PURPLE + " It will be available soon!");
-		player.sendMessage(plugin.getChatHeader() + ChatColor.LIGHT_PURPLE + " Enjoy!");
-		
-		
-		
-		
+		UtilitiesOG.trueogSendMessage(player, " ");
+		UtilitiesOG.trueogSendMessage(player, "&d" +"#-------------------------#");
+		UtilitiesOG.trueogSendMessage(player, "&d" +"#  PetMaster Dev Note           #");
+		UtilitiesOG.trueogSendMessage(player, "&d" +"#-------------------------#");
+		UtilitiesOG.trueogSendMessage(player, plugin.getChatHeader() + "&d" +" This is a test feature!");
+		UtilitiesOG.trueogSendMessage(player, plugin.getChatHeader() + "&d" + " It will be available soon!");
+		UtilitiesOG.trueogSendMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
 		return;
 	}
+
 }

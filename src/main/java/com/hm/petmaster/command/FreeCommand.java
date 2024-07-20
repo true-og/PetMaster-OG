@@ -45,4 +45,5 @@ public class FreeCommand {
 	public boolean collectPendingFreeRequest(Player player) {
 		return freePetSet.remove(player.getUniqueId());
 	}
+
 }

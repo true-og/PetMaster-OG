@@ -47,8 +47,11 @@ dependencies {
     compileOnly("org.purpurmc.purpur:purpur-api:1.19.4-R0.1-SNAPSHOT") // Declare purpur API version to be packaged.
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.2.3") // Import MiniPlaceholders API.
 	compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.9") // Import DecentHolograms API.
+	compileOnly("com.github.MilkBowl:VaultAPI:1.7") // Import Vault API.
 	implementation(project(":libs:MCShared-OG")) // Import source-based MCShared-OG API.
 	implementation(project(":libs:Utilities-OG")) // Import source-based Utilities-OG API.
+    implementation("net.kyori:adventure-text-minimessage:4.17.0") // Adventure Minimessage API.
+    implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Adventure Minimessage API.
 }
 
 tasks.withType<AbstractArchiveTask>().configureEach {

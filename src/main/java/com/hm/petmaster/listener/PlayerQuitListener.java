@@ -27,4 +27,5 @@ public class PlayerQuitListener implements Listener {
 		plugin.getSetOwnerCommand().collectPendingSetOwnershipRequest(event.getPlayer());
 		plugin.getFreeCommand().collectPendingFreeRequest(event.getPlayer());
 	}
+
 }

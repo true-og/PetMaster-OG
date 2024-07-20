@@ -32,7 +32,7 @@ public class ReloadCommand {
 			} else {
 				if (sender instanceof Player) {
 					Player player = (Player)  sender;
-					plugin.getMessageSender().sendMessage(sender, "configuration-reload-failed");
+					plugin.getMessageSender().sendMessage(player, "configuration-reload-failed");
 				}
 				plugin.getLogger().severe("Errors while reloading configuration. Please view logs for more details.");
 			}

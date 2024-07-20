@@ -1,18 +1,20 @@
 package com.hm.petmaster.command;
 
-import com.hm.petmaster.PetMaster;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+import java.util.logging.Level;
+
 import org.bukkit.DyeColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-import java.util.logging.Level;
+import com.hm.petmaster.PetMaster;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 /**
  * Class in charge of handling player requests to change default color of a pets
@@ -74,7 +76,7 @@ public class SetColorCommand {
 					player,
 					"available-colors",
 					Placeholder.component("colors", Component.text(colors.toString()))
-			);
+					);
 		}
 	}
 
@@ -89,4 +91,5 @@ public class SetColorCommand {
 		}
 		return DyeColor.RED;
 	}
+
 }

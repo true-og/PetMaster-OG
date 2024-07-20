@@ -1,16 +1,23 @@
 package com.hm.petmaster.listener;
 
-import com.hm.mcshared.event.PlayerChangeAnimalOwnershipEvent;
-import com.hm.petmaster.PetMaster;
-import eu.decentsoftware.holograms.api.DHAPI;
-import eu.decentsoftware.holograms.api.holograms.Hologram;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.milkbowl.vault.economy.Economy;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.*;
+import org.bukkit.entity.AnimalTamer;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Cat;
+import org.bukkit.entity.Llama;
+import org.bukkit.entity.Ocelot;
+import org.bukkit.entity.Parrot;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Sittable;
+import org.bukkit.entity.Tameable;
+import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,9 +26,13 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
+import com.hm.mcshared.event.PlayerChangeAnimalOwnershipEvent;
+import com.hm.petmaster.PetMaster;
+
+import eu.decentsoftware.holograms.api.DHAPI;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.milkbowl.vault.economy.Economy;
 
 /**
  * Class used to display holograms, change the owner of a pet or free a pet.
@@ -111,14 +122,14 @@ public class PlayerInteractListener implements Listener {
 			// Has the player requested to free one of his pets?
 			boolean freePet = plugin.getFreeCommand().collectPendingFreeRequest(player);
 
-			if (disableRiding && !isOwner && !player.hasPermission("petmaster.admin") && tameable instanceof Vehicle) {
+			if (disableRiding && ! isOwner && !player.hasPermission("petmaster.admin") && tameable instanceof Vehicle) {
 				plugin.getMessageSender().sendMessage(player, "not-owner");
 				event.setCancelled(true);
 				return;
 			}
 
 			// Cannot change ownership or free pet if not owner and no bypass permission.
-			if ((newOwner != null || freePet) && !isOwner && !player.hasPermission("petmaster.admin")) {
+			if ((newOwner != null || freePet) && ! isOwner && !player.hasPermission("petmaster.admin")) {
 				plugin.getMessageSender().sendMessage(player, "not-owner");
 				return;
 			}
@@ -127,7 +138,7 @@ public class PlayerInteractListener implements Listener {
 				changeOwner(player, currentOwner, newOwner, tameable);
 			} else if (freePet) {
 				freePet(player, currentOwner, tameable);
-			} else if ((displayToOwner || !isOwner) && player.hasPermission("petmaster.showowner.*")) {
+			} else if ((displayToOwner || ! isOwner) && player.hasPermission("petmaster.showowner.*")) {
 				displayHologramAndMessage(player, currentOwner, tameable);
 			}
 		}
@@ -218,27 +229,27 @@ public class PlayerInteractListener implements Listener {
 			int version = plugin.getServerVersion();
 			double offset = HORSE_OFFSET;
 			if (tameable instanceof Ocelot || version >= 14 && tameable instanceof Cat) {
-				if (!displayCat || !player.hasPermission("petmaster.showowner.cat")) {
+				if (! displayCat || !player.hasPermission("petmaster.showowner.cat")) {
 					return;
 				}
 				offset = CAT_OFFSET;
 			} else if (tameable instanceof Wolf) {
-				if (!displayDog || !player.hasPermission("petmaster.showowner.dog")) {
+				if (! displayDog || !player.hasPermission("petmaster.showowner.dog")) {
 					return;
 				}
 				offset = DOG_OFFSET;
 			} else if (version >= 11 && tameable instanceof Llama) {
-				if (!displayLlama || !player.hasPermission("petmaster.showowner.llama")) {
+				if (! displayLlama || !player.hasPermission("petmaster.showowner.llama")) {
 					return;
 				}
 				offset = LLAMA_OFFSET;
 			} else if (version >= 12 && tameable instanceof Parrot) {
-				if (!displayParrot || !player.hasPermission("petmaster.showowner.parrot")) {
+				if (! displayParrot || !player.hasPermission("petmaster.showowner.parrot")) {
 					return;
 				}
 				offset = PARROT_OFFSET;
 			} else if (tameable instanceof Vehicle) {
-				if (!displayHorse || !player.hasPermission("petmaster.showowner.horse")) {
+				if (! displayHorse || !player.hasPermission("petmaster.showowner.horse")) {
 					return;
 				}
 			}
@@ -254,10 +265,10 @@ public class PlayerInteractListener implements Listener {
 			List<String> lines = Collections.singletonList(plugin.getMessageSender().parseMessageToString(
 					"petmaster-hologram",
 					Placeholder.component("owner", Component.text(owner.getName() != null ? owner.getName() : "null"))
-			));
+					));
 
 			if (DHAPI.getHologram(hologramname) == null) {
-				Hologram hologram = DHAPI.createHologram(hologramname, hologramLocation, lines);
+				DHAPI.createHologram(hologramname, hologramLocation, lines);
 			} else {
 				return;
 			}
@@ -277,22 +288,19 @@ public class PlayerInteractListener implements Listener {
 
 		Component healthInfo = null;
 		if (showHealth) {
-			@SuppressWarnings("cast") // Tameable did not extend Animals in older versions of Bukkit.
 			Animals animal = (Animals) tameable;
 			healthInfo = plugin.getMessageSender().parseMessage(
 					plugin.getPluginLang().getString("petmaster-health"),
 					Placeholder.component("current-health", Component.text(String.format("%.1f", animal.getHealth()))),
 					Placeholder.component("max-health", Component.text(
 							plugin.getServerVersion() < 9 ? String.format("%.1f", animal.getMaxHealth())
-									: String.format("%.1f", animal.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())))
-			);
+									: String.format("%.1f", animal.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()))));
 		}
 
 		if (chatMessage) {
 			Component parsedComponent = plugin.getMessageSender().parseMessage(
 					plugin.getPluginLang().getString("petmaster-chat"),
-					Placeholder.component("owner", Component.text(owner.getName() != null ? owner.getName() : "null"))
-			);
+					Placeholder.component("owner", Component.text(owner.getName() != null ? owner.getName() : "null")));
 			if (healthInfo != null){
 				parsedComponent = parsedComponent.append(healthInfo);
 			}
@@ -302,8 +310,7 @@ public class PlayerInteractListener implements Listener {
 		if (actionBarMessage) {
 			Component parsedComponent = plugin.getMessageSender().parseMessage(
 					plugin.getPluginLang().getString("petmaster-action-bar"),
-					Placeholder.component("owner", Component.text(owner.getName() != null ? owner.getName() : "null"))
-			);
+					Placeholder.component("owner", Component.text(owner.getName() != null ? owner.getName() : "null")));
 			if (healthInfo != null){
 				parsedComponent = parsedComponent.append(healthInfo);
 			}
@@ -329,7 +336,7 @@ public class PlayerInteractListener implements Listener {
 						player,
 						"not-enough-money",
 						Placeholder.component("amount", Component.text(priceWithCurrency))
-				);
+						);
 				return false;
 			}
 			economy.withdrawPlayer(player, price);
@@ -337,8 +344,9 @@ public class PlayerInteractListener implements Listener {
 					player,
 					"change-owner-price",
 					Placeholder.component("amount", Component.text(priceWithCurrency))
-			);
+					);
 		}
 		return true;
 	}
+
 }

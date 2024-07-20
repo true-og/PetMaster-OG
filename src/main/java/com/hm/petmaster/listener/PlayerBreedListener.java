@@ -1,6 +1,5 @@
 package com.hm.petmaster.listener;
 
-import com.hm.petmaster.PetMaster;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.EntityType;
@@ -10,10 +9,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityBreedEvent;
 
+import com.hm.petmaster.PetMaster;
+
 public class PlayerBreedListener implements Listener {
-	
+
 	private final PetMaster plugin;
-	
+
 	public PlayerBreedListener(PetMaster plugin) {
 		this.plugin = plugin;
 	}
@@ -30,4 +31,5 @@ public class PlayerBreedListener implements Listener {
 			wolf.setCollarColor(color);
 		}
 	}
+
 }
