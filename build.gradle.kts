@@ -1,8 +1,8 @@
 plugins {
-    id("java") // Tell gradle this is a java project.
-    id("io.github.goooler.shadow") version "8.1.8"
+    id("com.gradleup.shadow") version "8.3.2" // Import shadow API.
+    java // Tell gradle this is a java project.
     eclipse // Import eclipse plugin for IDE integration.
-    kotlin("jvm") version "1.9.23" // Import kotlin jvm plugin for kotlin/java integration.
+    kotlin("jvm") version "2.0.20" // Import kotlin jvm plugin for kotlin/java integration.
 }
 
 java {
@@ -29,6 +29,7 @@ tasks.named<ProcessResources>("processResources") {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
     maven { // Consider using JitPack's official Maven repository instead
 
         url = uri("https://jitpack.io")
@@ -46,27 +47,19 @@ repositories {
 dependencies {
     compileOnly("org.purpurmc.purpur:purpur-api:1.19.4-R0.1-SNAPSHOT") // Declare purpur API version to be packaged.
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.2.3") // Import MiniPlaceholders API.
-	compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.9") // Import DecentHolograms API.
-	compileOnly("com.github.MilkBowl:VaultAPI:1.7") // Import Vault API.
-	implementation(project(":libs:MCShared-OG")) // Import source-based MCShared-OG API.
-	implementation(project(":libs:Utilities-OG")) // Import source-based Utilities-OG API.
+    compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.9") // Import DecentHolograms API.
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7") // Import Vault API.
+    implementation(project(":libs:MCShared-OG")) // Import source-based MCShared-OG API.
+    implementation(project(":libs:Utilities-OG")) // Import source-based Utilities-OG API.
     implementation("net.kyori:adventure-text-minimessage:4.17.0") // Adventure Minimessage API.
     implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Adventure Minimessage API.
+    
+    implementation(project(":libs:Utilities-OG"))
 }
 
-tasks.withType<AbstractArchiveTask>().configureEach {
+tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible builds.
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
-}
-
-tasks.shadowJar {
-    exclude("io.github.miniplaceholders.*") // Exclude the MiniPlaceholders package from being shadowed.
-    minimize()
-}
-
-tasks.jar {
-    dependsOn(tasks.shadowJar)
-    archiveClassifier.set("part")
 }
 
 tasks.shadowJar {
@@ -74,14 +67,21 @@ tasks.shadowJar {
     from("LICENSE") {
         into("/")
     }
+    exclude("io.github.miniplaceholders.*") // Exclude the MiniPlaceholders package from being shadowed.
+    minimize()
+}
+
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }
 
 tasks.jar {
-    dependsOn("shadowJar")
+    archiveClassifier.set("part")
 }
 
 tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")
+    options.compilerArgs.add("-Xlint:deprecation") // Triggers deprecation warning messages.
     options.encoding = "UTF-8"
     options.isFork = true
 }
