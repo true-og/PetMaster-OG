@@ -1,4 +1,4 @@
-name: PetMaster
+name: PetMaster-OG
 main: com.hm.petmaster.PetMaster
 version: '${version}'
 author: DarkPyves
