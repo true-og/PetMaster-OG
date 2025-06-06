@@ -1,8 +1,8 @@
 plugins {
-    id("com.gradleup.shadow") version "8.3.2" // Import shadow API.
+    id("com.gradleup.shadow") version "8.3.6" // Import shadow API.
     java // Tell gradle this is a java project.
     eclipse // Import eclipse plugin for IDE integration.
-    kotlin("jvm") version "2.0.21" // Import kotlin jvm plugin for kotlin/java integration.
+    kotlin("jvm") version "2.1.21" // Import kotlin jvm plugin for kotlin/java integration.
 }
 
 java {
@@ -25,6 +25,9 @@ tasks.named<ProcessResources>("processResources") {
     filesMatching("plugin.yml") {
         expand(props)
     }
+    from("LICENSE") { // Bundle license into .jars.
+        into("/")
+    }
 }
 
 repositories {
@@ -33,11 +36,9 @@ repositories {
     maven {
         url = uri("https://jitpack.io")
     }
-
     maven {
         url = uri("https://repo.purpurmc.org/snapshots")
     }
-    
     maven {
         url = uri("https://repo.codemc.io/repository/maven-public/")
     }
@@ -48,24 +49,19 @@ dependencies {
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.2.3") // Import MiniPlaceholders API.
     compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.9") // Import DecentHolograms API.
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") // Import Vault API.
-    
     implementation("net.kyori:adventure-text-minimessage:4.17.0") // Adventure Minimessage API.
     implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Adventure Minimessage API.
-    
-    implementation(project(":libs:MCShared-OG")) // Import source-based MCShared-OG API.
-    implementation(project(":libs:Utilities-OG")) // Import source-based Utilities-OG API.
+    compileOnly(project(":libs:MCShared-OG")) // Import source-based TrueOG Network MCShared-OG API.
+    compileOnly(project(":libs:Utilities-OG")) // Import source-based TrueOG Network Utilities-OG API.
 }
 
-tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible builds.
+tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible .jars
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
 }
 
 tasks.shadowJar {
-    archiveClassifier.set("") // Use empty string instead of null
-    from("LICENSE") {
-        into("/")
-    }
+    archiveClassifier.set("") // Use empty string instead of null.
     exclude("io.github.miniplaceholders.*") // Exclude the MiniPlaceholders package from being shadowed.
     minimize()
 }
