@@ -1,32 +1,27 @@
 package com.hm.petmaster.abilities;
 
+import com.hm.petmaster.PetMaster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 
-import com.hm.petmaster.PetMaster;
-
 public class PetAbilities {
 
-	PetMaster plugin = PetMaster.getPlugin(PetMaster.class);
+    PetMaster plugin = PetMaster.getPlugin(PetMaster.class);
 
-	// General Variables.
-	Tameable pet;
-	boolean isPetOwned;
-	Player player;
+    // General Variables.
+    Tameable pet;
+    boolean isPetOwned;
+    Player player;
 
-	// Health Bonus Variables.
-	int healthBonusAmount = plugin.getConfig().getInt("Health-Bonus-Amount");
-	boolean isHealthBonusEnabled = plugin.getConfig().getBoolean("Health-Bonus-Enabled");
+    // Health Bonus Variables.
+    int healthBonusAmount = plugin.getConfig().getInt("Health-Bonus-Amount");
+    boolean isHealthBonusEnabled = plugin.getConfig().getBoolean("Health-Bonus-Enabled");
 
+    public PetAbilities(PetMaster petmaster) {
+        this.plugin = petmaster;
+    }
 
-	public PetAbilities(PetMaster petmaster) {
-		this.plugin = petmaster;
-	}
-
-	public void petHealthBonus() {
-		if(isHealthBonusEnabled == true) {
-
-		}
-	}
-
+    public void petHealthBonus() {
+        if (isHealthBonusEnabled == true) {}
+    }
 }

@@ -1,19 +1,5 @@
 package com.hm.petmaster;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-
 import com.hm.mcshared.file.CommentedYamlConfiguration;
 import com.hm.petmaster.command.EnableDisableCommand;
 import com.hm.petmaster.command.FreeCommand;
@@ -33,10 +19,21 @@ import com.hm.petmaster.listener.PlayerLeashListener;
 import com.hm.petmaster.listener.PlayerQuitListener;
 import com.hm.petmaster.listener.PlayerTameListener;
 import com.hm.petmaster.utils.MessageSender;
-
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Manage pets and display useful information via holograms, action bar or chat messages!
@@ -56,253 +53,268 @@ import net.kyori.adventure.text.TextComponent;
  */
 public class PetMaster extends JavaPlugin {
 
-	// Plugin options and various parameters.
-	private TextComponent chatHeader;
-	private int serverVersion;
+    // Plugin options and various parameters.
+    private TextComponent chatHeader;
+    private int serverVersion;
 
-	// Fields related to file handling.
-	private CommentedYamlConfiguration config;
-	private CommentedYamlConfiguration lang;
+    // Fields related to file handling.
+    private CommentedYamlConfiguration config;
+    private CommentedYamlConfiguration lang;
 
-	// Plugin listeners.
-	private PlayerInteractListener playerInteractListener;
-	private PlayerLeashListener playerLeashListener;
-	private PlayerQuitListener playerQuitListener;
-	private PlayerAttackListener playerAttackListener;
-	private PlayerTameListener playerTameListener;
-	private PlayerBreedListener playerBreedListener;
+    // Plugin listeners.
+    private PlayerInteractListener playerInteractListener;
+    private PlayerLeashListener playerLeashListener;
+    private PlayerQuitListener playerQuitListener;
+    private PlayerAttackListener playerAttackListener;
+    private PlayerTameListener playerTameListener;
+    private PlayerBreedListener playerBreedListener;
 
-	// Additional classes related to plugin commands.
-	private HelpCommand helpCommand;
-	private InfoCommand infoCommand;
-	private SetOwnerCommand setOwnerCommand;
-	private FreeCommand freeCommand;
-	private EnableDisableCommand enableDisableCommand;
-	private ReloadCommand reloadCommand;
-	private SetColorCommand setColorCommand;
-	private ShareCommand shareCommand;
-	private PetInvincibleCommand petInvincibleCommand;
-	private PetSkillCommand petSkillCommand;
+    // Additional classes related to plugin commands.
+    private HelpCommand helpCommand;
+    private InfoCommand infoCommand;
+    private SetOwnerCommand setOwnerCommand;
+    private FreeCommand freeCommand;
+    private EnableDisableCommand enableDisableCommand;
+    private ReloadCommand reloadCommand;
+    private SetColorCommand setColorCommand;
+    private ShareCommand shareCommand;
+    private PetInvincibleCommand petInvincibleCommand;
+    private PetSkillCommand petSkillCommand;
 
-	// Messaging System.
-	private BukkitAudiences adventure;
-	private MessageSender messageSender;
+    // Messaging System.
+    private BukkitAudiences adventure;
+    private MessageSender messageSender;
 
-	public @NotNull BukkitAudiences adventure() {
-		if(this.adventure == null) {
-			throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-		}
-		return this.adventure;
-	}
+    public @NotNull BukkitAudiences adventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
+    }
 
-	/**
-	 * Called when server is launched or reloaded.
-	 */
-	@Override
-	public void onEnable() {
-		// Start enabling plugin.
-		long startTime = System.currentTimeMillis();
+    /**
+     * Called when server is launched or reloaded.
+     */
+    @Override
+    public void onEnable() {
+        // Start enabling plugin.
+        long startTime = System.currentTimeMillis();
 
-		// Initializing the Messaging System
-		this.adventure = BukkitAudiences.create(this);
-		this.messageSender = new MessageSender(this);
+        // Initializing the Messaging System
+        this.adventure = BukkitAudiences.create(this);
+        this.messageSender = new MessageSender(this);
 
-		getLogger().info("Server version..." + Bukkit.getServer().getBukkitVersion());
-		getLogger().info("Registered subVersion..." + Bukkit.getServer().getBukkitVersion().replace(".", ",").split(",")[1].split("-")[0]);
-		getLogger().info("Registering listeners...");
+        getLogger().info("Server version..." + Bukkit.getServer().getBukkitVersion());
+        getLogger()
+                .info("Registered subVersion..."
+                        + Bukkit.getServer()
+                                .getBukkitVersion()
+                                .replace(".", ",")
+                                .split(",")[1]
+                                .split("-")[0]);
+        getLogger().info("Registering listeners...");
 
-		serverVersion = Integer.parseInt(
-				Bukkit.getServer().getBukkitVersion().replace(".", ",").split(",")[1].split("-")[0]);
+        serverVersion = Integer.parseInt(Bukkit.getServer()
+                .getBukkitVersion()
+                .replace(".", ",")
+                .split(",")[1]
+                .split("-")[0]);
 
-		playerInteractListener = new PlayerInteractListener(this);
-		playerLeashListener = new PlayerLeashListener(this);
-		playerQuitListener = new PlayerQuitListener(this);
-		playerTameListener = new PlayerTameListener(this);
-		playerBreedListener = new PlayerBreedListener(this);
+        playerInteractListener = new PlayerInteractListener(this);
+        playerLeashListener = new PlayerLeashListener(this);
+        playerQuitListener = new PlayerQuitListener(this);
+        playerTameListener = new PlayerTameListener(this);
+        playerBreedListener = new PlayerBreedListener(this);
 
-		PluginManager pm = getServer().getPluginManager();
-		// Register listeners.
-		pm.registerEvents(playerInteractListener, this);
-		pm.registerEvents(playerLeashListener, this);
-		pm.registerEvents(playerQuitListener, this);
-		pm.registerEvents(playerTameListener, this);
-		if (getServerVersion() >= 10) {
-			pm.registerEvents(playerBreedListener, this);
-		}
+        PluginManager pm = getServer().getPluginManager();
+        // Register listeners.
+        pm.registerEvents(playerInteractListener, this);
+        pm.registerEvents(playerLeashListener, this);
+        pm.registerEvents(playerQuitListener, this);
+        pm.registerEvents(playerTameListener, this);
+        if (getServerVersion() >= 10) {
+            pm.registerEvents(playerBreedListener, this);
+        }
 
-		extractParametersFromConfig(true);
+        extractParametersFromConfig(true);
 
-		PetAbilityFile.petAbilitySetup();
-		PetAbilityFile.getPetAbilities().options().copyDefaults(true);
-		PetAbilityFile.petAbilitySave();
+        PetAbilityFile.petAbilitySetup();
+        PetAbilityFile.getPetAbilities().options().copyDefaults(true);
+        PetAbilityFile.petAbilitySave();
 
-		chatHeader = Component.text("<gray>[<gold>\u25b2<gray>]");
+        chatHeader = Component.text("<gray>[<gold>\u25b2<gray>]");
 
-		File playerColorConfig = new File(getDataFolder() + File.separator + "playersettings.yml");
+        File playerColorConfig = new File(getDataFolder() + File.separator + "playersettings.yml");
 
-		helpCommand = new HelpCommand(this);
-		infoCommand = new InfoCommand(this);
-		setOwnerCommand = new SetOwnerCommand(this);
-		freeCommand = new FreeCommand(this);
-		enableDisableCommand = new EnableDisableCommand(this);
-		reloadCommand = new ReloadCommand(this);
-		setColorCommand = new SetColorCommand(this, playerColorConfig);
-		shareCommand = new ShareCommand(this);
-		petInvincibleCommand = new PetInvincibleCommand(this);
-		petSkillCommand = new PetSkillCommand(this);
+        helpCommand = new HelpCommand(this);
+        infoCommand = new InfoCommand(this);
+        setOwnerCommand = new SetOwnerCommand(this);
+        freeCommand = new FreeCommand(this);
+        enableDisableCommand = new EnableDisableCommand(this);
+        reloadCommand = new ReloadCommand(this);
+        setColorCommand = new SetColorCommand(this, playerColorConfig);
+        shareCommand = new ShareCommand(this);
+        petInvincibleCommand = new PetInvincibleCommand(this);
+        petSkillCommand = new PetSkillCommand(this);
 
-		// Warn if an outdated entry is contained in the language file
-		if (lang.contains("petmaster-command-info-hover")){
-			getLogger().log(Level.WARNING, "Your language file contains outdated entrys! It is highly reccomended to delete it and let it regenerate so that all messages appear correctly.");
-		}
+        // Warn if an outdated entry is contained in the language file
+        if (lang.contains("petmaster-command-info-hover")) {
+            getLogger()
+                    .log(
+                            Level.WARNING,
+                            "Your language file contains outdated entrys! It is highly reccomended to delete it and let it regenerate so that all messages appear correctly.");
+        }
 
-		if (getServer().getPluginManager().isPluginEnabled(this)) {
-			getLogger().info("Plugin enabled and ready to run! Took " + (System.currentTimeMillis() - startTime) + "ms.");
-		}
-	}
+        if (getServer().getPluginManager().isPluginEnabled(this)) {
+            getLogger()
+                    .info("Plugin enabled and ready to run! Took " + (System.currentTimeMillis() - startTime) + "ms.");
+        }
+    }
 
-	/**
-	 * Extracts plugin parameters from the configuration file.
-	 *
-	 * @param attemptUpdate
-	 */
-	public void extractParametersFromConfig(boolean attemptUpdate) {
-		getLogger().info("Backing up and loading configuration files...");
+    /**
+     * Extracts plugin parameters from the configuration file.
+     *
+     * @param attemptUpdate
+     */
+    public void extractParametersFromConfig(boolean attemptUpdate) {
+        getLogger().info("Backing up and loading configuration files...");
 
-		config = loadAndBackupYamlConfiguration("config.yml");
-		lang = loadAndBackupYamlConfiguration(config.getString("languageFileName", "lang.yml"));
+        config = loadAndBackupYamlConfiguration("config.yml");
+        lang = loadAndBackupYamlConfiguration(config.getString("languageFileName", "lang.yml"));
 
-		if (!getServer().getPluginManager().isPluginEnabled(this)) {
-			return;
-		}
+        if (!getServer().getPluginManager().isPluginEnabled(this)) {
+            return;
+        }
 
-		playerInteractListener.extractParameters();
-		playerLeashListener.extractParameters();
+        playerInteractListener.extractParameters();
+        playerLeashListener.extractParameters();
 
-		if (config.getBoolean("disablePlayerDamage", false)) {
-			if (playerAttackListener == null) {
-				playerAttackListener = new PlayerAttackListener(this);
-				getServer().getPluginManager().registerEvents(playerAttackListener, this);
-				playerAttackListener.extractParameters();
-			}
+        if (config.getBoolean("disablePlayerDamage", false)) {
+            if (playerAttackListener == null) {
+                playerAttackListener = new PlayerAttackListener(this);
+                getServer().getPluginManager().registerEvents(playerAttackListener, this);
+                playerAttackListener.extractParameters();
+            }
 
-		} else {
-			if (playerAttackListener != null) {
-				HandlerList.unregisterAll(playerAttackListener);
-				playerAttackListener = null;
-			}
-		}
-	}
+        } else {
+            if (playerAttackListener != null) {
+                HandlerList.unregisterAll(playerAttackListener);
+                playerAttackListener = null;
+            }
+        }
+    }
 
-	/**
-	 * Loads and backs up file fileName.
-	 *
-	 * @param fileName
-	 * @return the loaded CommentedYamlConfiguration
-	 */
-	private CommentedYamlConfiguration loadAndBackupYamlConfiguration(String fileName) {
-		CommentedYamlConfiguration yamlConfiguration = new CommentedYamlConfiguration(fileName, this);
-		try {
-			yamlConfiguration.loadConfiguration();
-		} catch (IOException | InvalidConfigurationException e) {
-			getLogger().severe("Error while loading " + fileName + " file, disabling plugin.");
-			getLogger().log(Level.SEVERE,
-					"Verify your syntax by visiting yaml-online-parser.appspot.com and using the following logs: ", e);
-			getServer().getPluginManager().disablePlugin(this);
-		}
+    /**
+     * Loads and backs up file fileName.
+     *
+     * @param fileName
+     * @return the loaded CommentedYamlConfiguration
+     */
+    private CommentedYamlConfiguration loadAndBackupYamlConfiguration(String fileName) {
+        CommentedYamlConfiguration yamlConfiguration = new CommentedYamlConfiguration(fileName, this);
+        try {
+            yamlConfiguration.loadConfiguration();
+        } catch (IOException | InvalidConfigurationException e) {
+            getLogger().severe("Error while loading " + fileName + " file, disabling plugin.");
+            getLogger()
+                    .log(
+                            Level.SEVERE,
+                            "Verify your syntax by visiting yaml-online-parser.appspot.com and using the following logs: ",
+                            e);
+            getServer().getPluginManager().disablePlugin(this);
+        }
 
-		try {
-			yamlConfiguration.backupConfiguration();
-		} catch (IOException e) {
-			getLogger().log(Level.SEVERE, "Error while backing up configuration file: ", e);
-		}
-		return yamlConfiguration;
-	}
+        try {
+            yamlConfiguration.backupConfiguration();
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Error while backing up configuration file: ", e);
+        }
+        return yamlConfiguration;
+    }
 
-	/**
-	 * Called when server is stopped or reloaded.
-	 */
-	@Override
-	public void onDisable() {
-		// Closing Adventure API
-		if(this.adventure != null) {
-			this.adventure.close();
-			this.adventure = null;
-		}
-		getLogger().info("PetMaster has been disabled.");
-	}
+    /**
+     * Called when server is stopped or reloaded.
+     */
+    @Override
+    public void onDisable() {
+        // Closing Adventure API
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
+        getLogger().info("PetMaster has been disabled.");
+    }
 
-	/**
-	 * Called when a player or the console enters a command.
-	 */
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		if (!"petm".equalsIgnoreCase(cmd.getName())) {
-			return false;
-		}
+    /**
+     * Called when a player or the console enters a command.
+     */
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+        if (!"petm".equalsIgnoreCase(cmd.getName())) {
+            return false;
+        }
 
-		if (args.length == 0 || args.length == 1 && "help".equalsIgnoreCase(args[0])) {
-			helpCommand.getHelp(sender);
-		} else if ("info".equalsIgnoreCase(args[0])) {
-			infoCommand.getInfo(sender);
-		} else if ("reload".equalsIgnoreCase(args[0])) {
-			reloadCommand.reload(sender);
-		} else if ("disable".equalsIgnoreCase(args[0])) {
-			enableDisableCommand.setState(sender, true);
-		} else if ("enable".equalsIgnoreCase(args[0])) {
-			enableDisableCommand.setState(sender, false);
-		} else if ("setowner".equalsIgnoreCase(args[0]) && sender instanceof Player) {
-			setOwnerCommand.setOwner(((Player) sender), args);
-		} else if ("free".equalsIgnoreCase(args[0]) && sender instanceof Player) {
-			freeCommand.freePet(((Player) sender), args);
-		} else if ("setcolor".equalsIgnoreCase(args[0]) && sender instanceof Player) {
-			setColorCommand.setColor(((Player) sender), args);
-		} else if("sharepet".equalsIgnoreCase(args[0]) && sender instanceof Player) {
-			shareCommand.sharePetCommand((Player) sender);
-		} else if("godpet".equalsIgnoreCase(args[0]) && sender instanceof Player) {
-			petInvincibleCommand.godPetCommand((Player)sender);
-		} else if ("petskill".equalsIgnoreCase(args[0]) && sender instanceof Player) {
-			petSkillCommand.petSkillCommand((Player)sender);
-		} else {
-			getMessageSender().sendMessage(sender, "misused-command");
-		}
-		return true;
-	}
+        if (args.length == 0 || args.length == 1 && "help".equalsIgnoreCase(args[0])) {
+            helpCommand.getHelp(sender);
+        } else if ("info".equalsIgnoreCase(args[0])) {
+            infoCommand.getInfo(sender);
+        } else if ("reload".equalsIgnoreCase(args[0])) {
+            reloadCommand.reload(sender);
+        } else if ("disable".equalsIgnoreCase(args[0])) {
+            enableDisableCommand.setState(sender, true);
+        } else if ("enable".equalsIgnoreCase(args[0])) {
+            enableDisableCommand.setState(sender, false);
+        } else if ("setowner".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+            setOwnerCommand.setOwner(((Player) sender), args);
+        } else if ("free".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+            freeCommand.freePet(((Player) sender), args);
+        } else if ("setcolor".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+            setColorCommand.setColor(((Player) sender), args);
+        } else if ("sharepet".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+            shareCommand.sharePetCommand((Player) sender);
+        } else if ("godpet".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+            petInvincibleCommand.godPetCommand((Player) sender);
+        } else if ("petskill".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+            petSkillCommand.petSkillCommand((Player) sender);
+        } else {
+            getMessageSender().sendMessage(sender, "misused-command");
+        }
+        return true;
+    }
 
-	public int getServerVersion() {
-		return serverVersion;
-	}
+    public int getServerVersion() {
+        return serverVersion;
+    }
 
-	public TextComponent getChatHeader() {
-		return chatHeader;
-	}
+    public TextComponent getChatHeader() {
+        return chatHeader;
+    }
 
-	public CommentedYamlConfiguration getPluginConfig() {
-		return config;
-	}
+    public CommentedYamlConfiguration getPluginConfig() {
+        return config;
+    }
 
-	public CommentedYamlConfiguration getPluginLang() {
-		return lang;
-	}
+    public CommentedYamlConfiguration getPluginLang() {
+        return lang;
+    }
 
-	public SetOwnerCommand getSetOwnerCommand() {
-		return setOwnerCommand;
-	}
+    public SetOwnerCommand getSetOwnerCommand() {
+        return setOwnerCommand;
+    }
 
-	public FreeCommand getFreeCommand() {
-		return freeCommand;
-	}
+    public FreeCommand getFreeCommand() {
+        return freeCommand;
+    }
 
-	public EnableDisableCommand getEnableDisableCommand() {
-		return enableDisableCommand;
-	}
+    public EnableDisableCommand getEnableDisableCommand() {
+        return enableDisableCommand;
+    }
 
-	public SetColorCommand getSetColorCommand() {
-		return setColorCommand;
-	}
+    public SetColorCommand getSetColorCommand() {
+        return setColorCommand;
+    }
 
-	public MessageSender getMessageSender(){
-		return messageSender;
-	}
-
+    public MessageSender getMessageSender() {
+        return messageSender;
+    }
 }
