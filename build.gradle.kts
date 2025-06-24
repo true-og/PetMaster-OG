@@ -43,7 +43,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") // Import Vault API.
     implementation("net.kyori:adventure-text-minimessage:4.17.0") // Adventure Minimessage API.
     implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Adventure Minimessage API.
-    compileOnly(project(":libs:MCShared-OG")) // Import source-based TrueOG Network MCShared-OG API.
+    compileOnlyApi(project(":libs:MCShared-OG")) // Import source-based TrueOG Network MCShared-OG API.
     compileOnlyApi(project(":libs:Utilities-OG")) // Import source-based TrueOG Network Utilities-OG API.
 }
 
@@ -53,8 +53,8 @@ tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible .ja
 }
 
 tasks.shadowJar {
-    archiveClassifier.set("") // Use empty string instead of null.
     exclude("io.github.miniplaceholders.*") // Exclude the MiniPlaceholders package from being shadowed.
+    archiveClassifier.set("") // Use empty string instead of null.
     minimize()
 }
 
