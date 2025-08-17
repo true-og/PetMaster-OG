@@ -15,19 +15,26 @@ public class PlayerTameListener implements Listener {
     private final PetMaster plugin;
 
     public PlayerTameListener(PetMaster plugin) {
+
         this.plugin = plugin;
+
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerTamePet(EntityTameEvent event) {
+
         if (plugin.getServerVersion() >= 14 && event.getEntity().getType().equals(EntityType.CAT)) {
-            DyeColor color =
-                    plugin.getSetColorCommand().getColor(event.getOwner().getUniqueId());
+
+            DyeColor color = plugin.getSetColorCommand().getColor(event.getOwner().getUniqueId());
             ((Cat) event.getEntity()).setCollarColor(color);
+
         } else if (event.getEntity().getType().equals(EntityType.WOLF)) {
-            DyeColor color =
-                    plugin.getSetColorCommand().getColor(event.getOwner().getUniqueId());
+
+            DyeColor color = plugin.getSetColorCommand().getColor(event.getOwner().getUniqueId());
             ((Wolf) event.getEntity()).setCollarColor(color);
+
         }
+
     }
+
 }

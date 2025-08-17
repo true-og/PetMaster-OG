@@ -12,6 +12,7 @@ public class SetConfigCommand {
     public SetConfigCommand(PetMaster plugin) {
 
         this.plugin = plugin;
+
     }
 
     public void setConfigCommand(Player player, String[] args) {
@@ -29,11 +30,14 @@ public class SetConfigCommand {
                         UtilitiesOG.trueogMessage(player, "&d" + "#  PetMaster Dev Note           #");
                         UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
                         UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " This is a test feature!");
-                        UtilitiesOG.trueogMessage(
-                                player, plugin.getChatHeader() + "&d" + " It will be available soon!");
+                        UtilitiesOG.trueogMessage(player,
+                                plugin.getChatHeader() + "&d" + " It will be available soon!");
                         UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
+
                     }
+
                 }
+
                 if (args[1].equalsIgnoreCase("pet-abilities")) {
 
                     if (args[2].equalsIgnoreCase("enabled")) {
@@ -44,14 +48,15 @@ public class SetConfigCommand {
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
                             UtilitiesOG.trueogMessage(player, "&d" + "#  PetMaster Dev Note           #");
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " This is a test feature!");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " It will be available soon!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " This is a test feature!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " It will be available soon!");
                             UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
                             UtilitiesOG.trueogMessage(player, "You have enabled Pet Abilities!");
 
                             PetAbilityFile.getPetAbilities().set("Is-Pet-Abilities-Enabled", true);
+
                         }
 
                         if (args[3].equalsIgnoreCase("false")) {
@@ -60,16 +65,19 @@ public class SetConfigCommand {
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
                             UtilitiesOG.trueogMessage(player, "&d" + "#  PetMaster Dev Note           #");
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " This is a test feature!");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " It will be available soon!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " This is a test feature!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " It will be available soon!");
                             UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
                             UtilitiesOG.trueogMessage(player, "You have disabled Pet Abilities!");
 
                             PetAbilityFile.getPetAbilities().set("Is-Pet-Abilities-Enabled", false);
+
                         }
+
                     }
+
                     if (args[2].equalsIgnoreCase("set")) {
 
                         if (args[3].equalsIgnoreCase("health")) {
@@ -78,12 +86,13 @@ public class SetConfigCommand {
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
                             UtilitiesOG.trueogMessage(player, "&d" + "#  PetMaster Dev Note           #");
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " This is a test feature!");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " It will be available soon!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " This is a test feature!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " It will be available soon!");
                             UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
                             UtilitiesOG.trueogMessage(player, "You have enabled Pet Abilities!");
+
                         }
 
                         if (args[3].equalsIgnoreCase("damage")) {
@@ -92,12 +101,13 @@ public class SetConfigCommand {
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
                             UtilitiesOG.trueogMessage(player, "&d" + "#  PetMaster Dev Note           #");
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " This is a test feature!");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " It will be available soon!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " This is a test feature!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " It will be available soon!");
                             UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
                             UtilitiesOG.trueogMessage(player, "You have enabled Pet Abilities!");
+
                         }
 
                         if (args[3].equalsIgnoreCase("speed")) {
@@ -106,12 +116,13 @@ public class SetConfigCommand {
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
                             UtilitiesOG.trueogMessage(player, "&d" + "#  PetMaster Dev Note           #");
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " This is a test feature!");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " It will be available soon!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " This is a test feature!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " It will be available soon!");
                             UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
                             UtilitiesOG.trueogMessage(player, "You have enabled Pet Abilities!");
+
                         }
 
                         if (args[3].equalsIgnoreCase("protection")) {
@@ -120,16 +131,23 @@ public class SetConfigCommand {
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
                             UtilitiesOG.trueogMessage(player, "&d" + "#  PetMaster Dev Note           #");
                             UtilitiesOG.trueogMessage(player, "&d" + "#-------------------------#");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " This is a test feature!");
-                            UtilitiesOG.trueogMessage(
-                                    player, plugin.getChatHeader() + "&d" + " It will be available soon!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " This is a test feature!");
+                            UtilitiesOG.trueogMessage(player,
+                                    plugin.getChatHeader() + "&d" + " It will be available soon!");
                             UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
                             UtilitiesOG.trueogMessage(player, "You have enabled Pet Abilities!");
+
                         }
+
                     }
+
                 }
+
             }
+
         }
+
     }
+
 }

@@ -66,18 +66,25 @@ public class PlayerInteractListener implements Listener {
     private boolean disableRiding;
 
     public PlayerInteractListener(PetMaster petMaster) {
+
         this.plugin = petMaster;
         // Try to retrieve an Economy instance from Vault.
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") != null) {
-            RegisteredServiceProvider<Economy> rsp =
-                    Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+
+            RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager()
+                    .getRegistration(Economy.class);
             if (rsp != null) {
+
                 economy = rsp.getProvider();
+
             }
+
         }
+
     }
 
     public void extractParameters() {
+
         displayDog = plugin.getPluginConfig().getBoolean("displayDog", true);
         displayCat = plugin.getPluginConfig().getBoolean("displayCat", true);
         displayHorse = plugin.getPluginConfig().getBoolean("displayHorse", true);
@@ -94,24 +101,32 @@ public class PlayerInteractListener implements Listener {
         disableRiding = plugin.getPluginConfig().getBoolean("disableRiding", false);
 
         boolean decentHologramsAvailable = Bukkit.getPluginManager().isPluginEnabled("DecentHolograms");
-        // Checking whether user configured plugin to display hologram but HolographicsDisplays not available.
+        // Checking whether user configured plugin to display hologram but
+        // HolographicsDisplays not available.
         if (hologramMessage && !decentHologramsAvailable) {
+
             hologramMessage = false;
             actionBarMessage = true;
-            plugin.getLogger()
-                    .warning(
-                            "DecentHolograms was not found; disabling usage of holograms and enabling action bar messages.");
+            plugin.getLogger().warning(
+                    "DecentHolograms was not found; disabling usage of holograms and enabling action bar messages.");
+
         }
+
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
+
         if (shouldHandleEvent(event)) {
+
             Tameable tameable = (Tameable) event.getRightClicked();
             AnimalTamer currentOwner = tameable.getOwner();
             if (currentOwner == null || currentOwner.getName() == null) {
+
                 return;
+
             }
+
             // Has the player clicked on one of his own pets?
             Player player = event.getPlayer();
             boolean isOwner = player.getUniqueId().equals(currentOwner.getUniqueId());
@@ -121,25 +136,37 @@ public class PlayerInteractListener implements Listener {
             boolean freePet = plugin.getFreeCommand().collectPendingFreeRequest(player);
 
             if (disableRiding && !isOwner && !player.hasPermission("petmaster.admin") && tameable instanceof Vehicle) {
+
                 plugin.getMessageSender().sendMessage(player, "not-owner");
                 event.setCancelled(true);
                 return;
+
             }
 
             // Cannot change ownership or free pet if not owner and no bypass permission.
             if ((newOwner != null || freePet) && !isOwner && !player.hasPermission("petmaster.admin")) {
+
                 plugin.getMessageSender().sendMessage(player, "not-owner");
                 return;
+
             }
 
             if (newOwner != null) {
+
                 changeOwner(player, currentOwner, newOwner, tameable);
+
             } else if (freePet) {
+
                 freePet(player, currentOwner, tameable);
+
             } else if ((displayToOwner || !isOwner) && player.hasPermission("petmaster.showowner.*")) {
+
                 displayHologramAndMessage(player, currentOwner, tameable);
+
             }
+
         }
+
     }
 
     /**
@@ -149,10 +176,11 @@ public class PlayerInteractListener implements Listener {
      * @return true if the event should be handled, false otherwise
      */
     private boolean shouldHandleEvent(PlayerInteractEntityEvent event) {
-        return !plugin.getEnableDisableCommand().isDisabled()
-                && event.getRightClicked() instanceof Tameable
-                // On Minecraft 1.9+, the event is fired once per hand (HAND and OFF_HAND).
+
+        return !plugin.getEnableDisableCommand().isDisabled() && event.getRightClicked() instanceof Tameable
+        // On Minecraft 1.9+, the event is fired once per hand (HAND and OFF_HAND).
                 && (plugin.getServerVersion() < 9 || event.getHand() == EquipmentSlot.HAND);
+
     }
 
     /**
@@ -164,21 +192,24 @@ public class PlayerInteractListener implements Listener {
      * @param tameable
      */
     private void changeOwner(Player player, AnimalTamer oldOwner, Player newOwner, Tameable tameable) {
+
         if (chargePrice(player, changeOwnerPrice)) {
+
             // Change owner.
             tameable.setOwner(newOwner);
             player.sendMessage(plugin.getChatHeader()
                     + plugin.getPluginLang().getString("owner-changed", "This pet was given to a new owner!"));
             newOwner.sendMessage(plugin.getChatHeader()
-                    + plugin.getPluginLang()
-                            .getString("new-owner", "Player PLAYER gave you ownership of a pet!")
+                    + plugin.getPluginLang().getString("new-owner", "Player PLAYER gave you ownership of a pet!")
                             .replace("PLAYER", oldOwner.getName()));
 
             // Create new event to allow other plugins to be aware of the ownership change.
-            PlayerChangeAnimalOwnershipEvent playerChangeAnimalOwnershipEvent =
-                    new PlayerChangeAnimalOwnershipEvent(oldOwner, newOwner, tameable);
+            PlayerChangeAnimalOwnershipEvent playerChangeAnimalOwnershipEvent = new PlayerChangeAnimalOwnershipEvent(
+                    oldOwner, newOwner, tameable);
             Bukkit.getServer().getPluginManager().callEvent(playerChangeAnimalOwnershipEvent);
+
         }
+
     }
 
     /**
@@ -189,31 +220,46 @@ public class PlayerInteractListener implements Listener {
      * @param tameable
      */
     private void freePet(Player player, AnimalTamer oldOwner, Tameable tameable) {
+
         if (chargePrice(player, freePetPrice)) {
+
             // Free pet.
             tameable.setTamed(false);
             // Make freed pet stand up.
             if (plugin.getServerVersion() >= 12 && tameable instanceof Sittable) {
+
                 ((Sittable) tameable).setSitting(false);
+
             } else if (tameable instanceof Wolf) {
+
                 ((Wolf) tameable).setSitting(false);
+
             } else if (tameable instanceof Ocelot) {
-                // Since Minecraft 1.14, ocelots are no longer Sittable, use reflection for old game versions.
+
+                // Since Minecraft 1.14, ocelots are no longer Sittable, use reflection for old
+                // game versions.
                 try {
+
                     Method setSitting = Ocelot.class.getMethod("setSitting", boolean.class);
                     setSitting.invoke(tameable, false);
+
                 } catch (ReflectiveOperationException e) {
+
                     plugin.getLogger().warning("Failed to make freed ocelot stand up.");
+
                 }
+
             }
 
             plugin.getMessageSender().sendMessage(player, "pet-freed");
 
             // Create new event to allow other plugins to be aware of the freeing.
-            PlayerChangeAnimalOwnershipEvent playerChangeAnimalOwnershipEvent =
-                    new PlayerChangeAnimalOwnershipEvent(oldOwner, null, tameable);
+            PlayerChangeAnimalOwnershipEvent playerChangeAnimalOwnershipEvent = new PlayerChangeAnimalOwnershipEvent(
+                    oldOwner, null, tameable);
             Bukkit.getServer().getPluginManager().callEvent(playerChangeAnimalOwnershipEvent);
+
         }
+
     }
 
     /**
@@ -225,55 +271,80 @@ public class PlayerInteractListener implements Listener {
      */
     @SuppressWarnings("deprecation")
     private void displayHologramAndMessage(Player player, AnimalTamer owner, Tameable tameable) {
+
         if (hologramMessage) {
+
             int version = plugin.getServerVersion();
             double offset = HORSE_OFFSET;
             if (tameable instanceof Ocelot || version >= 14 && tameable instanceof Cat) {
+
                 if (!displayCat || !player.hasPermission("petmaster.showowner.cat")) {
+
                     return;
+
                 }
+
                 offset = CAT_OFFSET;
+
             } else if (tameable instanceof Wolf) {
+
                 if (!displayDog || !player.hasPermission("petmaster.showowner.dog")) {
+
                     return;
+
                 }
+
                 offset = DOG_OFFSET;
+
             } else if (version >= 11 && tameable instanceof Llama) {
+
                 if (!displayLlama || !player.hasPermission("petmaster.showowner.llama")) {
+
                     return;
+
                 }
+
                 offset = LLAMA_OFFSET;
+
             } else if (version >= 12 && tameable instanceof Parrot) {
+
                 if (!displayParrot || !player.hasPermission("petmaster.showowner.parrot")) {
+
                     return;
+
                 }
+
                 offset = PARROT_OFFSET;
+
             } else if (tameable instanceof Vehicle) {
+
                 if (!displayHorse || !player.hasPermission("petmaster.showowner.horse")) {
+
                     return;
+
                 }
+
             }
 
             Location eventLocation = ((Animals) tameable).getLocation();
             // Create location with offset.
-            Location hologramLocation = new Location(
-                    eventLocation.getWorld(),
-                    eventLocation.getX(),
-                    eventLocation.getY() + offset,
-                    eventLocation.getZ());
+            Location hologramLocation = new Location(eventLocation.getWorld(), eventLocation.getX(),
+                    eventLocation.getY() + offset, eventLocation.getZ());
 
             String hologramname = player.getUniqueId() + "_pm";
 
-            List<String> lines = Collections.singletonList(plugin.getMessageSender()
-                    .parseMessageToString(
-                            "petmaster-hologram",
-                            Placeholder.component(
-                                    "owner", Component.text(owner.getName() != null ? owner.getName() : "null"))));
+            List<String> lines = Collections
+                    .singletonList(plugin.getMessageSender().parseMessageToString("petmaster-hologram", Placeholder
+                            .component("owner", Component.text(owner.getName() != null ? owner.getName() : "null"))));
 
             if (DHAPI.getHologram(hologramname) == null) {
+
                 DHAPI.createHologram(hologramname, hologramLocation, lines);
+
             } else {
+
                 return;
+
             }
 
             // Runnable to delete hologram.
@@ -284,52 +355,55 @@ public class PlayerInteractListener implements Listener {
                 public void run() {
 
                     DHAPI.removeHologram(hologramname);
+
                 }
+
             }.runTaskLater(plugin, hologramDuration);
+
         }
 
         Component healthInfo = null;
         if (showHealth) {
+
             Animals animal = (Animals) tameable;
-            healthInfo = plugin.getMessageSender()
-                    .parseMessage(
-                            plugin.getPluginLang().getString("petmaster-health"),
-                            Placeholder.component(
-                                    "current-health", Component.text(String.format("%.1f", animal.getHealth()))),
-                            Placeholder.component(
-                                    "max-health",
-                                    Component.text(
-                                            plugin.getServerVersion() < 9
-                                                    ? String.format("%.1f", animal.getMaxHealth())
-                                                    : String.format(
-                                                            "%.1f",
-                                                            animal.getAttribute(Attribute.GENERIC_MAX_HEALTH)
-                                                                    .getValue()))));
+            healthInfo = plugin.getMessageSender().parseMessage(plugin.getPluginLang().getString("petmaster-health"),
+                    Placeholder.component("current-health", Component.text(String.format("%.1f", animal.getHealth()))),
+                    Placeholder.component("max-health", Component.text(plugin.getServerVersion() < 9
+                            ? String.format("%.1f", animal.getMaxHealth())
+                            : String.format("%.1f", animal.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()))));
+
         }
 
         if (chatMessage) {
-            Component parsedComponent = plugin.getMessageSender()
-                    .parseMessage(
-                            plugin.getPluginLang().getString("petmaster-chat"),
-                            Placeholder.component(
-                                    "owner", Component.text(owner.getName() != null ? owner.getName() : "null")));
+
+            Component parsedComponent = plugin.getMessageSender().parseMessage(
+                    plugin.getPluginLang().getString("petmaster-chat"),
+                    Placeholder.component("owner", Component.text(owner.getName() != null ? owner.getName() : "null")));
             if (healthInfo != null) {
+
                 parsedComponent = parsedComponent.append(healthInfo);
+
             }
+
             plugin.getMessageSender().sendComponent(player, parsedComponent);
+
         }
 
         if (actionBarMessage) {
-            Component parsedComponent = plugin.getMessageSender()
-                    .parseMessage(
-                            plugin.getPluginLang().getString("petmaster-action-bar"),
-                            Placeholder.component(
-                                    "owner", Component.text(owner.getName() != null ? owner.getName() : "null")));
+
+            Component parsedComponent = plugin.getMessageSender().parseMessage(
+                    plugin.getPluginLang().getString("petmaster-action-bar"),
+                    Placeholder.component("owner", Component.text(owner.getName() != null ? owner.getName() : "null")));
             if (healthInfo != null) {
+
                 parsedComponent = parsedComponent.append(healthInfo);
+
             }
+
             plugin.getMessageSender().sendComponentToActionBar(player, parsedComponent);
+
         }
+
     }
 
     /**
@@ -340,26 +414,30 @@ public class PlayerInteractListener implements Listener {
      * @return true if money should be withdrawn from the player, false otherwise
      */
     private boolean chargePrice(Player player, int price) {
+
         // Charge player for changing ownership.
         if (price > 0 && !player.hasPermission("petmaster.admin") && economy != null) {
-            // If server has set different currency names depending on amount, adapt message accordingly.
-            String priceWithCurrency =
-                    price + " " + (price > 1 ? economy.currencyNamePlural() : economy.currencyNameSingular());
+
+            // If server has set different currency names depending on amount, adapt message
+            // accordingly.
+            String priceWithCurrency = price + " "
+                    + (price > 1 ? economy.currencyNamePlural() : economy.currencyNameSingular());
             if (economy.getBalance(player) < price) {
-                plugin.getMessageSender()
-                        .sendMessage(
-                                player,
-                                "not-enough-money",
-                                Placeholder.component("amount", Component.text(priceWithCurrency)));
+
+                plugin.getMessageSender().sendMessage(player, "not-enough-money",
+                        Placeholder.component("amount", Component.text(priceWithCurrency)));
                 return false;
+
             }
+
             economy.withdrawPlayer(player, price);
-            plugin.getMessageSender()
-                    .sendMessage(
-                            player,
-                            "change-owner-price",
-                            Placeholder.component("amount", Component.text(priceWithCurrency)));
+            plugin.getMessageSender().sendMessage(player, "change-owner-price",
+                    Placeholder.component("amount", Component.text(priceWithCurrency)));
+
         }
+
         return true;
+
     }
+
 }

@@ -19,28 +19,45 @@ public class FreeCommand {
     private final Set<UUID> freePetSet;
 
     public FreeCommand(PetMaster plugin) {
+
         this.plugin = plugin;
         freePetSet = new HashSet<>();
+
     }
 
     public void freePet(Player player, String[] args) {
+
         if (args.length == 1) {
+
             if (!player.hasPermission("petmaster.free")) {
+
                 plugin.getMessageSender().sendMessage(player, "no-permissions");
+
             } else if (plugin.getEnableDisableCommand().isDisabled()) {
+
                 plugin.getMessageSender().sendMessage(player, "currently-disabled");
+
             } else {
+
                 freePetSet.add(player.getUniqueId());
                 plugin.getMessageSender().sendMessage(player, "right-click");
                 // Cancel previous pending operation.
                 plugin.getSetOwnerCommand().collectPendingSetOwnershipRequest(player);
+
             }
+
         } else {
+
             plugin.getMessageSender().sendMessage(player, "misused-command");
+
         }
+
     }
 
     public boolean collectPendingFreeRequest(Player player) {
+
         return freePetSet.remove(player.getUniqueId());
+
     }
+
 }

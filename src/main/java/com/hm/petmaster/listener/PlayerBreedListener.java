@@ -15,20 +15,28 @@ public class PlayerBreedListener implements Listener {
     private final PetMaster plugin;
 
     public PlayerBreedListener(PetMaster plugin) {
+
         this.plugin = plugin;
+
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBreedNewPet(EntityBreedEvent event) {
+
         if (plugin.getServerVersion() >= 14 && event.getEntity().getType().equals(EntityType.CAT)) {
+
             Cat cat = ((Cat) event.getEntity());
             DyeColor color = plugin.getSetColorCommand().getColor(cat.getOwner().getUniqueId());
             cat.setCollarColor(color);
+
         } else if (event.getEntity().getType().equals(EntityType.WOLF)) {
+
             Wolf wolf = ((Wolf) event.getEntity());
-            DyeColor color =
-                    plugin.getSetColorCommand().getColor(wolf.getOwner().getUniqueId());
+            DyeColor color = plugin.getSetColorCommand().getColor(wolf.getOwner().getUniqueId());
             wolf.setCollarColor(color);
+
         }
+
     }
+
 }

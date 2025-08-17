@@ -14,33 +14,44 @@ public class HelpCommand {
     private final PetMaster plugin;
 
     public HelpCommand(PetMaster plugin) {
+
         this.plugin = plugin;
+
     }
 
     public void getHelp(CommandSender sender) {
+
         // Header.
         plugin.getMessageSender().sendMessage(sender, "petmaster-help-header");
 
         plugin.getMessageSender().sendMessage(sender, "petmaster-command-info");
 
         if (sender.hasPermission("petmaster.free")) {
+
             plugin.getMessageSender().sendMessage(sender, "petmaster-command-free");
+
         }
 
         if (sender.hasPermission("petmaster.admin")) {
+
             plugin.getMessageSender().sendMessage(sender, "petmaster-command-reload");
 
             plugin.getMessageSender().sendMessage(sender, "petmaster-command-enable");
 
             plugin.getMessageSender().sendMessage(sender, "petmaster-command-disable");
+
         }
 
         if (sender.hasPermission("petmaster.setowner")) {
+
             plugin.getMessageSender().sendMessage(sender, "petmaster-command-setowner");
+
         }
 
         if (sender.hasPermission("petmaster.setcolor")) {
+
             plugin.getMessageSender().sendMessage(sender, "petmaster-command-setcolor");
+
         }
 
         // Empty line.
@@ -48,5 +59,7 @@ public class HelpCommand {
 
         // Tip message.
         plugin.getMessageSender().sendMessage(sender, "petmaster-tip");
+
     }
+
 }

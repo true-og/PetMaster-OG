@@ -25,72 +25,106 @@ public class SetColorCommand {
     private final File playerColorConfig;
 
     public SetColorCommand(PetMaster plugin, File playerColorConfig) {
+
         this.plugin = plugin;
         this.playerColorConfig = playerColorConfig;
+
     }
 
     public void setColor(Player player, String[] args) {
+
         if (args.length != 2) {
+
             plugin.getMessageSender().sendMessage(player, "misused-command");
             return;
+
         }
+
         try {
+
             DyeColor color = DyeColor.valueOf(args[1].toUpperCase());
             if (!player.hasPermission("petmaster.setcolor")) {
+
                 plugin.getMessageSender().sendMessage(player, "no-permissions");
+
             } else if (plugin.getEnableDisableCommand().isDisabled()) {
+
                 plugin.getMessageSender().sendMessage(player, "currently-disabled");
+
             } else {
+
                 try {
+
                     if (!playerColorConfig.exists()) {
+
                         playerColorConfig.createNewFile();
+
                     }
+
                     FileConfiguration config = YamlConfiguration.loadConfiguration(playerColorConfig);
-                    ConfigurationSection playerConfig =
-                            config.getConfigurationSection(player.getUniqueId().toString());
+                    ConfigurationSection playerConfig = config.getConfigurationSection(player.getUniqueId().toString());
                     if (playerConfig == null) {
+
                         playerConfig = config.createSection(player.getUniqueId().toString());
+
                     }
+
                     playerConfig.set(COLOR_CONFIG_NAME, color.toString());
                     config.save(playerColorConfig);
 
                     plugin.getMessageSender().sendMessage(player, "color-successfully-set");
+
                 } catch (IOException e) {
+
                     plugin.getLogger().severe("Error while loading " + playerColorConfig.getName());
-                    plugin.getLogger()
-                            .log(
-                                    Level.SEVERE,
-                                    "Verify your syntax by visiting yaml-online-parser.appspot.com and using the following logs: ",
-                                    e);
+                    plugin.getLogger().log(Level.SEVERE,
+                            "Verify your syntax by visiting yaml-online-parser.appspot.com and using the following logs: ",
+                            e);
+
                 }
+
             }
+
         } catch (IllegalArgumentException ex) {
+
             StringBuilder colors = new StringBuilder();
             int length = DyeColor.values().length;
             for (int i = 0; i < length; ++i) {
+
                 DyeColor color = DyeColor.values()[i];
                 colors.append(color.name().toLowerCase());
                 if (i < length - 1) {
+
                     colors.append(' ');
+
                 }
+
             }
-            plugin.getMessageSender()
-                    .sendMessage(
-                            player,
-                            "available-colors",
-                            Placeholder.component("colors", Component.text(colors.toString())));
+
+            plugin.getMessageSender().sendMessage(player, "available-colors",
+                    Placeholder.component("colors", Component.text(colors.toString())));
+
         }
+
     }
 
     public DyeColor getColor(UUID player) {
+
         FileConfiguration config = YamlConfiguration.loadConfiguration(playerColorConfig);
         ConfigurationSection playerConfig = config.getConfigurationSection(player.toString());
         if (playerConfig != null) {
+
             String color = playerConfig.getString(COLOR_CONFIG_NAME);
             if (color != null) {
+
                 return DyeColor.valueOf(color);
+
             }
+
         }
+
         return DyeColor.RED;
+
     }
+
 }

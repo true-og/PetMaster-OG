@@ -12,6 +12,7 @@ public class ShareCommand {
     public ShareCommand(PetMaster petMaster) {
 
         this.plugin = petMaster;
+
     }
 
     public void sharePetCommand(CommandSender sender) {
@@ -27,5 +28,7 @@ public class ShareCommand {
         UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
 
         return;
+
     }
+
 }

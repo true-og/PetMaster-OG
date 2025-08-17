@@ -18,10 +18,17 @@ public class PetAbilities {
     boolean isHealthBonusEnabled = plugin.getConfig().getBoolean("Health-Bonus-Enabled");
 
     public PetAbilities(PetMaster petmaster) {
+
         this.plugin = petmaster;
+
     }
 
     public void petHealthBonus() {
-        if (isHealthBonusEnabled == true) {}
+
+        if (isHealthBonusEnabled == true) {
+
+        }
+
     }
+
 }

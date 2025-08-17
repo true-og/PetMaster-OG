@@ -18,27 +18,36 @@ public class PlayerLeashListener implements Listener {
     private boolean disableLeash;
 
     public PlayerLeashListener(PetMaster petMaster) {
+
         this.plugin = petMaster;
+
     }
 
     public void extractParameters() {
+
         disableLeash = plugin.getPluginConfig().getBoolean("disableLeash", false);
+
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerLeashEntityEvent(PlayerLeashEntityEvent event) {
-        if (plugin.getEnableDisableCommand().isDisabled() || !disableLeash) return;
+
+        if (plugin.getEnableDisableCommand().isDisabled() || !disableLeash)
+            return;
         Entity entity = event.getEntity();
-        if (!(entity instanceof Tameable)) return;
+        if (!(entity instanceof Tameable))
+            return;
 
         Player player = event.getPlayer();
         Tameable tameable = (Tameable) entity;
         AnimalTamer currentOwner = tameable.getOwner();
-        if (currentOwner == null
-                || currentOwner.getUniqueId().equals(player.getUniqueId())
-                || player.hasPermission("petmaster.admin")) return;
+        if (currentOwner == null || currentOwner.getUniqueId().equals(player.getUniqueId())
+                || player.hasPermission("petmaster.admin"))
+            return;
 
         plugin.getMessageSender().sendMessage(player, "not-owner");
         event.setCancelled(true);
+
     }
+
 }

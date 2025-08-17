@@ -37,36 +37,54 @@ public class PetAbilityFile {
     private static int parrotProtection = 0;
 
     public static void petAbilitySetup() {
-        petAbilityFile = new File(
-                Bukkit.getServer().getPluginManager().getPlugin("PetMaster").getDataFolder(), "petability.yml");
+
+        petAbilityFile = new File(Bukkit.getServer().getPluginManager().getPlugin("PetMaster").getDataFolder(),
+                "petability.yml");
 
         if (!petAbilityFile.exists()) {
+
             try {
+
                 petAbilityFile.createNewFile();
+
             } catch (IOException e) {
 
             }
+
         }
+
         petAbility = YamlConfiguration.loadConfiguration(petAbilityFile);
+
     }
 
     public static FileConfiguration getPetAbilities() {
+
         return petAbility;
+
     }
 
     public static void petAbilitySave() {
+
         try {
+
             petAbility.save(petAbilityFile);
+
         } catch (IOException e) {
+
             e.printStackTrace();
+
         }
+
     }
 
     public static void petAbilityReload() {
+
         petAbility = YamlConfiguration.loadConfiguration(petAbilityFile);
+
     }
 
     public static void petAbilityAddDefaults() {
+
         petAbility.set("Is-Pet-Abilities-Enabled", true);
 
         petAbility.set("Wolf-Health", wolfHealth);
@@ -93,5 +111,7 @@ public class PetAbilityFile {
         petAbility.set("Parrot-Damage", parrotDamage);
         petAbility.set("Parrot-Speed", parrotSpeed);
         petAbility.set("Parrot-Protection", parrotProtection);
+
     }
+
 }

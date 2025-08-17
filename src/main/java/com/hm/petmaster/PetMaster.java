@@ -1,5 +1,19 @@
 package com.hm.petmaster;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
 import com.hm.mcshared.file.CommentedYamlConfiguration;
 import com.hm.petmaster.command.EnableDisableCommand;
 import com.hm.petmaster.command.FreeCommand;
@@ -19,27 +33,17 @@ import com.hm.petmaster.listener.PlayerLeashListener;
 import com.hm.petmaster.listener.PlayerQuitListener;
 import com.hm.petmaster.listener.PlayerTameListener;
 import com.hm.petmaster.utils.MessageSender;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
+
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
- * Manage pets and display useful information via holograms, action bar or chat messages!
+ * Manage pets and display useful information via holograms, action bar or chat
+ * messages!
  *
- * PetMaster is under GNU General Public License version 3. Please visit the plugin's GitHub for more information :
- * https://github.com/PyvesB/PetMaster
+ * PetMaster is under GNU General Public License version 3. Please visit the
+ * plugin's GitHub for more information : https://github.com/PyvesB/PetMaster
  *
  * Official plugin's server: hellominecraft.fr
  *
@@ -86,10 +90,15 @@ public class PetMaster extends JavaPlugin {
     private MessageSender messageSender;
 
     public @NotNull BukkitAudiences adventure() {
+
         if (this.adventure == null) {
+
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+
         }
+
         return this.adventure;
+
     }
 
     /**
@@ -97,6 +106,7 @@ public class PetMaster extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+
         // Start enabling plugin.
         long startTime = System.currentTimeMillis();
 
@@ -105,20 +115,12 @@ public class PetMaster extends JavaPlugin {
         this.messageSender = new MessageSender(this);
 
         getLogger().info("Server version..." + Bukkit.getServer().getBukkitVersion());
-        getLogger()
-                .info("Registered subVersion..."
-                        + Bukkit.getServer()
-                                .getBukkitVersion()
-                                .replace(".", ",")
-                                .split(",")[1]
-                                .split("-")[0]);
+        getLogger().info("Registered subVersion..."
+                + Bukkit.getServer().getBukkitVersion().replace(".", ",").split(",")[1].split("-")[0]);
         getLogger().info("Registering listeners...");
 
-        serverVersion = Integer.parseInt(Bukkit.getServer()
-                .getBukkitVersion()
-                .replace(".", ",")
-                .split(",")[1]
-                .split("-")[0]);
+        serverVersion = Integer
+                .parseInt(Bukkit.getServer().getBukkitVersion().replace(".", ",").split(",")[1].split("-")[0]);
 
         playerInteractListener = new PlayerInteractListener(this);
         playerLeashListener = new PlayerLeashListener(this);
@@ -133,7 +135,9 @@ public class PetMaster extends JavaPlugin {
         pm.registerEvents(playerQuitListener, this);
         pm.registerEvents(playerTameListener, this);
         if (getServerVersion() >= 10) {
+
             pm.registerEvents(playerBreedListener, this);
+
         }
 
         extractParametersFromConfig(true);
@@ -159,16 +163,19 @@ public class PetMaster extends JavaPlugin {
 
         // Warn if an outdated entry is contained in the language file
         if (lang.contains("petmaster-command-info-hover")) {
-            getLogger()
-                    .log(
-                            Level.WARNING,
-                            "Your language file contains outdated entrys! It is highly reccomended to delete it and let it regenerate so that all messages appear correctly.");
+
+            getLogger().log(Level.WARNING,
+                    "Your language file contains outdated entrys! It is highly reccomended to delete it and let it regenerate so that all messages appear correctly.");
+
         }
 
         if (getServer().getPluginManager().isPluginEnabled(this)) {
+
             getLogger()
                     .info("Plugin enabled and ready to run! Took " + (System.currentTimeMillis() - startTime) + "ms.");
+
         }
+
     }
 
     /**
@@ -177,31 +184,42 @@ public class PetMaster extends JavaPlugin {
      * @param attemptUpdate
      */
     public void extractParametersFromConfig(boolean attemptUpdate) {
+
         getLogger().info("Backing up and loading configuration files...");
 
         config = loadAndBackupYamlConfiguration("config.yml");
         lang = loadAndBackupYamlConfiguration(config.getString("languageFileName", "lang.yml"));
 
         if (!getServer().getPluginManager().isPluginEnabled(this)) {
+
             return;
+
         }
 
         playerInteractListener.extractParameters();
         playerLeashListener.extractParameters();
 
         if (config.getBoolean("disablePlayerDamage", false)) {
+
             if (playerAttackListener == null) {
+
                 playerAttackListener = new PlayerAttackListener(this);
                 getServer().getPluginManager().registerEvents(playerAttackListener, this);
                 playerAttackListener.extractParameters();
+
             }
 
         } else {
+
             if (playerAttackListener != null) {
+
                 HandlerList.unregisterAll(playerAttackListener);
                 playerAttackListener = null;
+
             }
+
         }
+
     }
 
     /**
@@ -211,25 +229,33 @@ public class PetMaster extends JavaPlugin {
      * @return the loaded CommentedYamlConfiguration
      */
     private CommentedYamlConfiguration loadAndBackupYamlConfiguration(String fileName) {
+
         CommentedYamlConfiguration yamlConfiguration = new CommentedYamlConfiguration(fileName, this);
         try {
+
             yamlConfiguration.loadConfiguration();
+
         } catch (IOException | InvalidConfigurationException e) {
+
             getLogger().severe("Error while loading " + fileName + " file, disabling plugin.");
-            getLogger()
-                    .log(
-                            Level.SEVERE,
-                            "Verify your syntax by visiting yaml-online-parser.appspot.com and using the following logs: ",
-                            e);
+            getLogger().log(Level.SEVERE,
+                    "Verify your syntax by visiting yaml-online-parser.appspot.com and using the following logs: ", e);
             getServer().getPluginManager().disablePlugin(this);
+
         }
 
         try {
+
             yamlConfiguration.backupConfiguration();
+
         } catch (IOException e) {
+
             getLogger().log(Level.SEVERE, "Error while backing up configuration file: ", e);
+
         }
+
         return yamlConfiguration;
+
     }
 
     /**
@@ -237,12 +263,17 @@ public class PetMaster extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+
         // Closing Adventure API
         if (this.adventure != null) {
+
             this.adventure.close();
             this.adventure = null;
+
         }
+
         getLogger().info("PetMaster has been disabled.");
+
     }
 
     /**
@@ -250,71 +281,119 @@ public class PetMaster extends JavaPlugin {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+
         if (!"petm".equalsIgnoreCase(cmd.getName())) {
+
             return false;
+
         }
 
         if (args.length == 0 || args.length == 1 && "help".equalsIgnoreCase(args[0])) {
+
             helpCommand.getHelp(sender);
+
         } else if ("info".equalsIgnoreCase(args[0])) {
+
             infoCommand.getInfo(sender);
+
         } else if ("reload".equalsIgnoreCase(args[0])) {
+
             reloadCommand.reload(sender);
+
         } else if ("disable".equalsIgnoreCase(args[0])) {
+
             enableDisableCommand.setState(sender, true);
+
         } else if ("enable".equalsIgnoreCase(args[0])) {
+
             enableDisableCommand.setState(sender, false);
+
         } else if ("setowner".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+
             setOwnerCommand.setOwner(((Player) sender), args);
+
         } else if ("free".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+
             freeCommand.freePet(((Player) sender), args);
+
         } else if ("setcolor".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+
             setColorCommand.setColor(((Player) sender), args);
+
         } else if ("sharepet".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+
             shareCommand.sharePetCommand((Player) sender);
+
         } else if ("godpet".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+
             petInvincibleCommand.godPetCommand((Player) sender);
+
         } else if ("petskill".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+
             petSkillCommand.petSkillCommand((Player) sender);
+
         } else {
+
             getMessageSender().sendMessage(sender, "misused-command");
+
         }
+
         return true;
+
     }
 
     public int getServerVersion() {
+
         return serverVersion;
+
     }
 
     public TextComponent getChatHeader() {
+
         return chatHeader;
+
     }
 
     public CommentedYamlConfiguration getPluginConfig() {
+
         return config;
+
     }
 
     public CommentedYamlConfiguration getPluginLang() {
+
         return lang;
+
     }
 
     public SetOwnerCommand getSetOwnerCommand() {
+
         return setOwnerCommand;
+
     }
 
     public FreeCommand getFreeCommand() {
+
         return freeCommand;
+
     }
 
     public EnableDisableCommand getEnableDisableCommand() {
+
         return enableDisableCommand;
+
     }
 
     public SetColorCommand getSetColorCommand() {
+
         return setColorCommand;
+
     }
 
     public MessageSender getMessageSender() {
+
         return messageSender;
+
     }
+
 }

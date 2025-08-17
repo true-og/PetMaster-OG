@@ -12,6 +12,7 @@ public class PetInvincibleCommand {
     public PetInvincibleCommand(PetMaster petMaster) {
 
         this.plugin = petMaster;
+
     }
 
     public void godPetCommand(CommandSender sender) {
@@ -27,5 +28,7 @@ public class PetInvincibleCommand {
         UtilitiesOG.trueogMessage(player, plugin.getChatHeader() + "&d" + " Enjoy!");
 
         return;
+
     }
+
 }
