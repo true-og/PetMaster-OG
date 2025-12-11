@@ -54,7 +54,7 @@ dependencies {
     compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.9") // Import DecentHolograms API.
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") // Import Vault API.
     implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Import verbose Minimessage API.
-    compileOnlyApi(project(":libs:MCShared-OG")) // Import TrueOG Network MCShared-OG API (from source).
+    implementation(project(":libs:MCShared-OG")) // Import TrueOG Network MCShared-OG API (from source).
     compileOnlyApi(project(":libs:Utilities-OG")) // Import TrueOG Network Utilities-OG Java API (from source).
 }
 

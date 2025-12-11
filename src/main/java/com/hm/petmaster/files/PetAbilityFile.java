@@ -38,7 +38,7 @@ public class PetAbilityFile {
 
     public static void petAbilitySetup() {
 
-        petAbilityFile = new File(Bukkit.getServer().getPluginManager().getPlugin("PetMaster").getDataFolder(),
+        petAbilityFile = new File(Bukkit.getServer().getPluginManager().getPlugin("PetMaster-OG").getDataFolder(),
                 "petability.yml");
 
         if (!petAbilityFile.exists()) {
