@@ -1,17 +1,20 @@
 package com.hm.petmaster.utils;
 
-import com.hm.petmaster.PetMaster;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.hm.petmaster.PetMaster;
+
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class MessageSender {
 
@@ -34,7 +37,7 @@ public class MessageSender {
 
     public Component parseMessage(String message, TagResolver... tagResolvers) {
 
-        List<TagResolver> allTagResolvers = new ArrayList<>(Arrays.stream(tagResolvers).toList());
+        final List<TagResolver> allTagResolvers = new ArrayList<>(Arrays.stream(tagResolvers).toList());
         allTagResolvers.add(Placeholder.parsed("prefix",
                 plugin.getPluginLang().getString("petmaster-prefix", "<gray>[<gold>♞<gray>] ")));
         return miniMessage.deserialize(message, allTagResolvers.toArray(new TagResolver[] {}));
@@ -43,14 +46,14 @@ public class MessageSender {
 
     public void sendComponent(Player player, Component component) {
 
-        Audience audience = plugin.adventure().player(player);
+        final Audience audience = plugin.adventure().player(player);
         audience.sendMessage(component);
 
     }
 
     public void sendComponentToActionBar(Player player, Component component) {
 
-        Audience audience = plugin.adventure().player(player);
+        final Audience audience = plugin.adventure().player(player);
         audience.sendActionBar(component);
 
     }
@@ -63,14 +66,14 @@ public class MessageSender {
 
     public void sendMessage(Player player, String key, TagResolver... tagResolvers) {
 
-        Audience audience = plugin.adventure().player(player);
+        final Audience audience = plugin.adventure().player(player);
         sendMessage(audience, key, tagResolvers);
 
     }
 
     public void sendMessage(CommandSender sender, String key, TagResolver... tagResolvers) {
 
-        Audience audience = plugin.adventure().sender(sender);
+        final Audience audience = plugin.adventure().sender(sender);
         sendMessage(audience, key, tagResolvers);
 
     }
@@ -83,14 +86,14 @@ public class MessageSender {
 
     public void sendActionBar(Player player, String key, TagResolver... tagResolvers) {
 
-        Audience audience = plugin.adventure().player(player);
+        final Audience audience = plugin.adventure().player(player);
         sendActionBar(audience, key, tagResolvers);
 
     }
 
     public void sendNewLine(CommandSender sender, boolean sendPrefix) {
 
-        Audience audience = plugin.adventure().sender(sender);
+        final Audience audience = plugin.adventure().sender(sender);
 
         if (sendPrefix) {
 

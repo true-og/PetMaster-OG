@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -108,7 +109,7 @@ public class PetMaster extends JavaPlugin {
     public void onEnable() {
 
         // Start enabling plugin.
-        long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
 
         // Initializing the Messaging System
         this.adventure = BukkitAudiences.create(this);
@@ -128,7 +129,7 @@ public class PetMaster extends JavaPlugin {
         playerTameListener = new PlayerTameListener(this);
         playerBreedListener = new PlayerBreedListener(this);
 
-        PluginManager pm = getServer().getPluginManager();
+        final PluginManager pm = getServer().getPluginManager();
         // Register listeners.
         pm.registerEvents(playerInteractListener, this);
         pm.registerEvents(playerLeashListener, this);
@@ -148,7 +149,7 @@ public class PetMaster extends JavaPlugin {
 
         chatHeader = Component.text("<gray>[<gold>\u25b2<gray>]");
 
-        File playerColorConfig = new File(getDataFolder() + File.separator + "playersettings.yml");
+        final File playerColorConfig = new File(getDataFolder() + File.separator + "playersettings.yml");
 
         helpCommand = new HelpCommand(this);
         infoCommand = new InfoCommand(this);
@@ -230,7 +231,7 @@ public class PetMaster extends JavaPlugin {
      */
     private CommentedYamlConfiguration loadAndBackupYamlConfiguration(String fileName) {
 
-        CommentedYamlConfiguration yamlConfiguration = new CommentedYamlConfiguration(fileName, this);
+        final CommentedYamlConfiguration yamlConfiguration = new CommentedYamlConfiguration(fileName, this);
         try {
 
             yamlConfiguration.loadConfiguration();
@@ -248,9 +249,9 @@ public class PetMaster extends JavaPlugin {
 
             yamlConfiguration.backupConfiguration();
 
-        } catch (IOException e) {
+        } catch (IOException error) {
 
-            getLogger().log(Level.SEVERE, "Error while backing up configuration file: ", e);
+            getLogger().log(Level.SEVERE, "Error while backing up configuration file: ", error);
 
         }
 
@@ -282,53 +283,53 @@ public class PetMaster extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
-        if (!"petm".equalsIgnoreCase(cmd.getName())) {
+        if (!StringUtils.equalsIgnoreCase("petm", cmd.getName())) {
 
             return false;
 
         }
 
-        if (args.length == 0 || args.length == 1 && "help".equalsIgnoreCase(args[0])) {
+        if (args.length == 0 || args.length == 1 && StringUtils.equalsIgnoreCase("help", args[0])) {
 
             helpCommand.getHelp(sender);
 
-        } else if ("info".equalsIgnoreCase(args[0])) {
+        } else if (StringUtils.equalsIgnoreCase("info", args[0])) {
 
             infoCommand.getInfo(sender);
 
-        } else if ("reload".equalsIgnoreCase(args[0])) {
+        } else if (StringUtils.equalsIgnoreCase("reload", args[0])) {
 
             reloadCommand.reload(sender);
 
-        } else if ("disable".equalsIgnoreCase(args[0])) {
+        } else if (StringUtils.equalsIgnoreCase("disable", args[0])) {
 
             enableDisableCommand.setState(sender, true);
 
-        } else if ("enable".equalsIgnoreCase(args[0])) {
+        } else if (StringUtils.equalsIgnoreCase("enable", args[0])) {
 
             enableDisableCommand.setState(sender, false);
 
-        } else if ("setowner".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+        } else if (StringUtils.equalsIgnoreCase("setowner", args[0]) && sender instanceof Player) {
 
             setOwnerCommand.setOwner(((Player) sender), args);
 
-        } else if ("free".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+        } else if (StringUtils.equalsIgnoreCase("free", args[0]) && sender instanceof Player) {
 
             freeCommand.freePet(((Player) sender), args);
 
-        } else if ("setcolor".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+        } else if (StringUtils.equalsIgnoreCase("setcolor", args[0]) && sender instanceof Player) {
 
             setColorCommand.setColor(((Player) sender), args);
 
-        } else if ("sharepet".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+        } else if (StringUtils.equalsIgnoreCase("sharepet", args[0]) && sender instanceof Player) {
 
             shareCommand.sharePetCommand((Player) sender);
 
-        } else if ("godpet".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+        } else if (StringUtils.equalsIgnoreCase("godpet", args[0]) && sender instanceof Player) {
 
             petInvincibleCommand.godPetCommand((Player) sender);
 
-        } else if ("petskill".equalsIgnoreCase(args[0]) && sender instanceof Player) {
+        } else if (StringUtils.equalsIgnoreCase("petskill", args[0]) && sender instanceof Player) {
 
             petSkillCommand.petSkillCommand((Player) sender);
 

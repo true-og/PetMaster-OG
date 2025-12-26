@@ -26,7 +26,7 @@ configurations.creating {
 
 configure<EclipseModel> {
     project {
-        name = "PetMaster-OG-Plugin"
+        name = "PetMaster-OG"
     }
     classpath {
         plusConfigurations.add(ideLibs)

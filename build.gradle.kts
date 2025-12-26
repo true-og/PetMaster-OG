@@ -31,6 +31,8 @@ version = "1.0" // Declare plugin version (will be in .jar).
 
 val apiVersion = "1.19" // Declare minecraft server target version.
 
+val shadowPrefix = "${project.group}".replace("-", "") + ".shadow" // Dashless shadow project name.
+
 /* ----------------------------- Resources ----------------------------- */
 tasks.named<ProcessResources>("processResources") {
     val props = mapOf("version" to version, "apiVersion" to apiVersion)
@@ -52,6 +54,8 @@ dependencies {
     compileOnly("org.purpurmc.purpur:purpur-api:1.19.4-R0.1-SNAPSHOT") // Declare Purpur API version to be packaged.
     compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.9") // Import DecentHolograms API.
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") // Import Vault API.
+    implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Import Adventure Platform API.
+    implementation("net.kyori:adventure-text-minimessage:4.13.1") // Import MiniMessage API.
     implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Import verbose Minimessage API.
     implementation(project(":libs:MCShared-OG")) // Import TrueOG Network MCShared-OG API (from source).
     compileOnlyApi(project(":libs:Utilities-OG")) // Import TrueOG Network Utilities-OG Java API (from source).
@@ -67,10 +71,9 @@ tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible .ja
 
 /* ----------------------------- Shadow -------------------------------- */
 tasks.shadowJar {
-    exclude("io.github.miniplaceholders.*") // Exclude the MiniPlaceholders package from being shadowed.
     isEnableRelocation = true
-    relocationPrefix = "${project.group}.shadow"
-    archiveClassifier.set("") // Use empty string instead of null.
+    relocationPrefix = shadowPrefix
+    archiveClassifier.set("") // Use empty String instead of null.
     minimize()
 }
 
