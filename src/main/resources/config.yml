@@ -16,13 +16,13 @@
 #=============================o=o=============================#
 
 # Enable or disable chat messages when right-clicking on a pet.
-chatMessage: false
+chatMessage: true
 
 # Enable or disable hologram messages when right-clicking on a pet (requires DecentHolograms).
 hologramMessage: false
 
 # Enable or disable action bar messages when right-clicking on a pet.
-actionBarMessage: true
+actionBarMessage: false
 
 # Duration of the hologram, in server ticks (20 ticks = 1 second).
 hologramDuration: 50
@@ -31,13 +31,13 @@ hologramDuration: 50
 showHealth: true
 
 # Check for update on plugin launch and notify when an OP joins the game.
-checkForUpdate: true
+checkForUpdate: false
 
 # Name of the language file.
 languageFileName: 'lang.yml'
 
 # Enable or disable showing ownership information for a player's own pets.
-displayToOwner: false
+displayToOwner: true
 
 # Price of the /petm setowner command (requires Vault, not charged if petmaster.admin permission).
 changeOwnerPrice: 0
@@ -64,7 +64,7 @@ displayParrot: true
 disableLeash: false
 
 # Prevent others from mounting pet (horse/donkey).
-disableRiding: false
+disableRiding: true
 
 # Protect pets to avoid being hurt by other player.
 disablePlayerDamage: false

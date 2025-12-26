@@ -4,7 +4,7 @@ version: '${version}'
 author: DarkPyves
 softdepend: [HolographicDisplays,Vault]
 description: Manage pets and display useful information via holograms, action bar or chat messages!
-website: https://github.com/PyvesB/PetMaster
+website: https://github.com/true-og/PetMaster-OG
 api-version: '${apiVersion}'
 commands:
   petm:
