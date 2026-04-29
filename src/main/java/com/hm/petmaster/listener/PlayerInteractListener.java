@@ -1,6 +1,7 @@
 package com.hm.petmaster.listener;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
@@ -168,7 +169,23 @@ public class PlayerInteractListener implements Listener {
      */
     private void freePet(Player player, AnimalTamer oldOwner, Tameable tameable) {
 
-        if (!chargePrice(player, freePetPrice)) {
+        chargePrice(player, freePetPrice).thenAccept(charged -> {
+
+            if (!charged) {
+
+                return;
+
+            }
+
+            Bukkit.getScheduler().runTask(plugin, () -> freePetAfterCharge(player, oldOwner, tameable));
+
+        });
+
+    }
+
+    private void freePetAfterCharge(Player player, AnimalTamer oldOwner, Tameable tameable) {
+
+        if (!player.isOnline()) {
 
             return;
 
@@ -256,69 +273,77 @@ public class PlayerInteractListener implements Listener {
      *
      * @param player
      * @param price  price in DiamondBank-OG shards
-     * @return true if money should be withdrawn from the player, false otherwise
+     * @return future resolving true if the player was charged or no charge was
+     *         required, false otherwise
      */
-    private boolean chargePrice(Player player, int price) {
+    private CompletableFuture<Boolean> chargePrice(Player player, int price) {
 
-        if (price > 0 && !player.hasPermission("petmaster.admin")) {
+        if (price <= 0 || player.hasPermission("petmaster.admin")) {
 
-            final DiamondBankAPIJava economy = PetMaster.getDiamondBankAPI();
+            return CompletableFuture.completedFuture(true);
 
-            if (economy == null) {
+        }
 
-                PetMaster.disableSelf("DiamondBank-OG API is null while charging for pet freeing!");
-                return false;
+        final DiamondBankAPIJava economy = PetMaster.getDiamondBankAPI();
+        if (economy == null) {
 
-            }
+            PetMaster.disableSelf("DiamondBank-OG API is null while charging for pet freeing!");
+            return CompletableFuture.completedFuture(false);
+
+        }
+
+        final CompletableFuture<Boolean> result = new CompletableFuture<>();
+        final String priceText = economy.shardsToDiamonds(price);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 
             try {
 
-                if (economy.getTotalShards(player.getUniqueId()) < price) {
-
-                    plugin.getMessageSender().sendMessage(player, "not-enough-money", Placeholder.component("amount",
-                            UtilitiesOG.trueogColorize(economy.shardsToDiamonds(price))));
-
-                    return false;
-
-                }
-
-                economy.consumeFromPlayer(player.getUniqueId(), price, "Player " + player.getName() + " paid "
-                        + economy.shardsToDiamonds(price) + " Diamonds to free a pet.", "");
+                economy.consumeFromPlayer(player.getUniqueId(), price,
+                        "Player " + player.getName() + " paid " + priceText + " Diamonds to free a pet.", "");
                 plugin.getMessageSender().sendMessage(player, "change-owner-price",
-                        Placeholder.component("amount", UtilitiesOG.trueogColorize(economy.shardsToDiamonds(price))));
-                return true;
+                        Placeholder.component("amount", UtilitiesOG.trueogColorize(priceText)));
+                result.complete(true);
 
             } catch (EconomyDisabledException economyDisabledException) {
 
                 economyDisabledException.printStackTrace();
-
-                PetMaster.disableSelf("DiamondBank-OG Economy Disabled!");
-                return false;
+                scheduleDisableSelf("DiamondBank-OG Economy Disabled!");
+                result.complete(false);
 
             } catch (InvalidPlayerException invalidPlayerException) {
 
                 invalidPlayerException.printStackTrace();
-
-                PetMaster.disableSelf("Invalid player: + " + player.getName() + " when charging for pet freeing!");
-                return false;
+                scheduleDisableSelf("Invalid player: + " + player.getName() + " when charging for pet freeing!");
+                result.complete(false);
 
             } catch (PlayerNotOnlineException playerNotOnlineException) {
 
-                PetMaster.disableSelf("Player " + player.getName() + " is not online when charging for pet freeing!");
-                return false;
+                scheduleDisableSelf("Player " + player.getName() + " is not online when charging for pet freeing!");
+                result.complete(false);
 
             } catch (InsufficientFundsException insufficientFundsException) {
 
                 plugin.getMessageSender().sendMessage(player, "not-enough-money",
-                        Placeholder.component("amount", UtilitiesOG.trueogColorize(economy.shardsToDiamonds(price))));
+                        Placeholder.component("amount", UtilitiesOG.trueogColorize(priceText)));
+                result.complete(false);
 
-                return false;
+            } catch (RuntimeException runtimeException) {
+
+                plugin.getLogger().log(java.util.logging.Level.SEVERE, "Failed to charge player for pet freeing.",
+                        runtimeException);
+                result.complete(false);
 
             }
 
-        }
+        });
 
-        return true;
+        return result;
+
+    }
+
+    private void scheduleDisableSelf(String reason) {
+
+        Bukkit.getScheduler().runTask(plugin, () -> PetMaster.disableSelf(reason));
 
     }
 
