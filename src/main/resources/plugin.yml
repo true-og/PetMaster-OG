@@ -2,8 +2,8 @@ name: PetMaster-OG
 main: com.hm.petmaster.PetMaster
 version: '${version}'
 author: DarkPyves
-softdepend: [HolographicDisplays,Vault]
-description: Manage pets and display useful information via holograms, action bar or chat messages!
+depend: [DiamondBank-OG, Utilities-OG]
+description: Manage pets and display useful information via hover labels or chat messages!
 website: https://github.com/true-og/PetMaster-OG
 api-version: '${apiVersion}'
 commands:

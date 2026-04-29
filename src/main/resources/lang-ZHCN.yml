@@ -16,9 +16,8 @@ configuration-reload-failed: "在加载配置文件过程中出现错误. 请翻
 # 有关其他插件命令.
 petmaster-disabled: "PetMaster 已被停用，直到下次重新载入或使用 /petm enable."
 petmaster-enabled: "PetMaster 已启用."
-petmaster-hologram: "主人 "
+petmaster-hover: "主人 <gold><owner></gold>"
 petmaster-chat: "主人 "
-petmaster-action-bar: "主人 "
 petmaster-health: "生命值: "
 player-offline: "那个玩家当前不在线!"
 cannot-change-to-yourself: "你不能将主人设置为自己!"
@@ -51,7 +50,7 @@ version-command-version: "版本:"
 version-command-website: "网站:"
 version-command-author: "作者:"
 version-command-description: "描述:"
-version-command-description-details: "这是谁家的宠物? 通过全息、动作栏和聊天栏管理宠物的相关信息!"
+version-command-description-details: "这是谁家的宠物? 通过悬浮标签和聊天栏管理宠物的相关信息!"
 version-command-enabled: "插件启用:"
 
 #============================================================#

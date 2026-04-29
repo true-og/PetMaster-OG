@@ -12,6 +12,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +28,7 @@ import com.hm.petmaster.command.SetColorCommand;
 import com.hm.petmaster.command.SetOwnerCommand;
 import com.hm.petmaster.command.ShareCommand;
 import com.hm.petmaster.files.PetAbilityFile;
+import com.hm.petmaster.listener.PetOwnerLabelListener;
 import com.hm.petmaster.listener.PlayerAttackListener;
 import com.hm.petmaster.listener.PlayerBreedListener;
 import com.hm.petmaster.listener.PlayerInteractListener;
@@ -38,10 +40,10 @@ import com.hm.petmaster.utils.MessageSender;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.trueog.diamondbankog.api.DiamondBankAPIJava;
 
 /**
- * Manage pets and display useful information via holograms, action bar or chat
- * messages!
+ * Manage pets and display useful information via hover labels or chat messages!
  *
  * PetMaster is under GNU General Public License version 3. Please visit the
  * plugin's GitHub for more information : https://github.com/PyvesB/PetMaster
@@ -73,6 +75,7 @@ public class PetMaster extends JavaPlugin {
     private PlayerAttackListener playerAttackListener;
     private PlayerTameListener playerTameListener;
     private PlayerBreedListener playerBreedListener;
+    private PetOwnerLabelListener petOwnerLabelListener;
 
     // Additional classes related to plugin commands.
     private HelpCommand helpCommand;
@@ -90,6 +93,12 @@ public class PetMaster extends JavaPlugin {
     private BukkitAudiences adventure;
     private MessageSender messageSender;
 
+    // Plugin instance.
+    private static PetMaster instance;
+
+    // DiamondBank-OG Economy.
+    private static DiamondBankAPIJava diamondBankAPI;
+
     public @NotNull BukkitAudiences adventure() {
 
         if (this.adventure == null) {
@@ -102,14 +111,39 @@ public class PetMaster extends JavaPlugin {
 
     }
 
+    public static DiamondBankAPIJava getDiamondBankAPI() {
+
+        return diamondBankAPI;
+
+    }
+
     /**
      * Called when server is launched or reloaded.
      */
     @Override
     public void onEnable() {
 
+        // Initialize plugin instance.
+        instance = this;
+
         // Start enabling plugin.
         final long startTime = System.currentTimeMillis();
+
+        // Initialize the DiamondBank-OG API.
+        final RegisteredServiceProvider<DiamondBankAPIJava> provider = getServer().getServicesManager()
+                .getRegistration(DiamondBankAPIJava.class);
+
+        // If the DiamondBank-OG API failed to initialize, do this...
+        if (provider == null) {
+
+            // Tell Bukkit to disable this plugin, and inform the console.
+            disableSelf("DiamondBank-OG API is null - disabling " + getPluginMeta().getName() + "!");
+            return;
+
+        }
+
+        // Assign the active instance of DiamondBank-OG to the API handler.
+        diamondBankAPI = provider.getProvider();
 
         // Initializing the Messaging System
         this.adventure = BukkitAudiences.create(this);
@@ -123,7 +157,7 @@ public class PetMaster extends JavaPlugin {
         serverVersion = Integer
                 .parseInt(Bukkit.getServer().getBukkitVersion().replace(".", ",").split(",")[1].split("-")[0]);
 
-        playerInteractListener = new PlayerInteractListener(this);
+        playerInteractListener = new PlayerInteractListener();
         playerLeashListener = new PlayerLeashListener(this);
         playerQuitListener = new PlayerQuitListener(this);
         playerTameListener = new PlayerTameListener(this);
@@ -162,6 +196,9 @@ public class PetMaster extends JavaPlugin {
         petInvincibleCommand = new PetInvincibleCommand(this);
         petSkillCommand = new PetSkillCommand(this);
 
+        petOwnerLabelListener = new PetOwnerLabelListener(this);
+        pm.registerEvents(petOwnerLabelListener, this);
+
         // Warn if an outdated entry is contained in the language file
         if (lang.contains("petmaster-command-info-hover")) {
 
@@ -199,6 +236,11 @@ public class PetMaster extends JavaPlugin {
 
         playerInteractListener.extractParameters();
         playerLeashListener.extractParameters();
+        if (petOwnerLabelListener != null) {
+
+            petOwnerLabelListener.extractParameters();
+
+        }
 
         if (config.getBoolean("disablePlayerDamage", false)) {
 
@@ -264,6 +306,13 @@ public class PetMaster extends JavaPlugin {
      */
     @Override
     public void onDisable() {
+
+        if (petOwnerLabelListener != null) {
+
+            petOwnerLabelListener.shutdown();
+            petOwnerLabelListener = null;
+
+        }
 
         // Closing Adventure API
         if (this.adventure != null) {
@@ -394,6 +443,34 @@ public class PetMaster extends JavaPlugin {
     public MessageSender getMessageSender() {
 
         return messageSender;
+
+    }
+
+    public static PetMaster getPlugin() {
+
+        return instance;
+
+    }
+
+    // Helps this plugin kill itself gracefully (in minecraft).
+    public static void disableSelf(String reason) {
+
+        final PetMaster pluginInstance = getPlugin();
+        if (pluginInstance == null) {
+
+            Bukkit.getLogger().severe("[PetMaster-OG] " + reason);
+            return;
+
+        }
+
+        if (!pluginInstance.isEnabled()) {
+
+            return;
+
+        }
+
+        pluginInstance.getLogger().severe(reason);
+        Bukkit.getPluginManager().disablePlugin(pluginInstance);
 
     }
 

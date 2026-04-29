@@ -20,9 +20,8 @@ configuration-reload-failed: "<prefix> Errors while reloading configuration. Ple
 # Related to other plugin commands.
 petmaster-disabled: "<prefix> PetMaster disabled till next reload or /petm enable."
 petmaster-enabled: "<prefix> PetMaster enabled."
-petmaster-hologram: "Pet owned by <gold><owner></gold>."
+petmaster-hover: "Pet owned by <gold><owner></gold>."
 petmaster-chat: "<prefix> Pet owned by <gold><owner></gold>. "
-petmaster-action-bar: "<gray>Pet owned by <gold><owner><gray>. "
 petmaster-health: "<gray>Health: <blue><current-health></blue>/<blue><max-health></blue>"
 player-offline: "<prefix> The specified player is offline!"
 cannot-change-to-yourself: "<prefix> You cannot change the owner to yourself!"
@@ -54,7 +53,7 @@ version-command-version: "<prefix> Version: <gold><version>"
 version-command-website: "<prefix> Website: <gold><website>"
 version-command-author: "<prefix> Author: <gold><author>"
 version-command-description: "<prefix> Description: <white><description-details>"
-version-command-description-details: "Manage pets and display useful information via holograms, action bar or chat messages!"
+version-command-description-details: "Manage pets and display useful information via hover labels or chat messages!"
 version-command-enabled: "<prefix> Plugin enabled: <gold><state>"
 
 #============================================================#

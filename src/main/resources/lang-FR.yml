@@ -23,9 +23,8 @@ configuration-reload-failed: "Erreur(s) lors du rechargement des configurations.
 # Related to other plugin commands.
 petmaster-disabled: "PetMaster est désactivé jusqu'au prochain rechargement /petm enable."
 petmaster-enabled: "PetMaster est activé."
-petmaster-hologram: "Animal de : "
+petmaster-hover: "Animal de : <gold><owner></gold>"
 petmaster-chat: "Animal de : "
-petmaster-action-bar: "Animal de : "
 petmaster-health: "Vie : "
 player-offline: "Le joueur spécifié est hors ligne !"
 cannot-change-to-yourself: "Vous êtes déjà le propriétaire !"

@@ -16,9 +16,8 @@ configuration-reload-failed: "Yapılandırma dosyası yenilenirken bir hata olu�
 # Diğer eklenti komutları ile ilgili komutlar.
 petmaster-disabled: "PetMaster bir sonraki yeniden yüklemeye, yeniden başlatmaya veya /petm enable komutu kullanılana kadar devre dışı bırakıldı."
 petmaster-enabled: "PetMaster etkinleştirldi."
-petmaster-hologram: "Evcil hayvanın sahibi: "
+petmaster-hover: "Evcil hayvanın sahibi: <gold><owner></gold>"
 petmaster-chat: "Evcil hayvanın sahibi: "
-petmaster-action-bar: "Evcil hayvanın sahibi: "
 petmaster-health: "Can: "
 player-offline: "Belirtilen oyuncu şu anda çevrimdışı"
 cannot-change-to-yourself: "Kendini yeni sahip olarak atayamazsın."
@@ -55,7 +54,7 @@ version-command-version: "Versiyon:"
 version-command-website: "Websitesi:"
 version-command-author: "Yaratıcı:"
 version-command-description: "Açıklama:"
-version-command-description-details: "Evcil hayvanları yönetin ve hologramlar, eylem çubuğu veya sohbet mesajları aracılığıyla faydalı bilgileri görüntüleyin!"
+version-command-description-details: "Evcil hayvanları yönetin ve faydalı bilgileri gezinen etiketler veya sohbet mesajlarıyla görüntüleyin!"
 version-command-enabled: "Etkinlik durumu:"
 
 #============================================================#

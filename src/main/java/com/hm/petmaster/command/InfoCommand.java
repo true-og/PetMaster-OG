@@ -39,7 +39,7 @@ public class InfoCommand {
         templates.add(Placeholder.component("author", Component.text(plugin.getPluginMeta().getAuthors().get(0))));
         templates.add(Placeholder.component("description-details",
                 Component.text(plugin.getPluginLang().getString("version-command-description-details",
-                        "Manage pets and display useful information via holograms, action bar or chat messages!"))));
+                        "Manage pets and display useful information via hover labels or chat messages!"))));
         templates.add(Placeholder.component("state",
                 Component.text(plugin.getEnableDisableCommand().isDisabled() ? "NO" : "YES")));
         plugin.getMessageSender().sendMessage(sender, "version-command-name", templates.toArray(new TagResolver[] {}));

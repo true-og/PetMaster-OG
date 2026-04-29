@@ -16,9 +16,8 @@ configuration-reload-failed: "Fehler beim aktualisieren der Konfigurationen. Bit
 # Related to other plugin commands.
 petmaster-disabled: "PetMaster deaktiviert bis zum nächster aktualisierung oder mit /petm enable wieder aktivieren."
 petmaster-enabled: "PetMaster aktiviert"
-petmaster-hologram: "Haustierbesitzer "
+petmaster-hover: "Haustierbesitzer <gold><owner></gold>"
 petmaster-chat: "Haustierbesitzer "
-petmaster-action-bar: "Haustierbesitzer "
 petmaster-health: "Leben: "
 player-offline: "Der Haustierbesitzer ist offline."
 cannot-change-to-yourself: "Du kannst nicht den Halter auf dich umändern."
@@ -55,7 +54,7 @@ version-command-version: "Version:"
 version-command-website: "Webseite:"
 version-command-author: "Autor:"
 version-command-description: "Beschreibung:"
-version-command-description-details: "Wem gehört das Tier? Manage Haustiere und lass dir Informatinen mit Hologrammen, Aktionbar oder im Chat anzeigen!"
+version-command-description-details: "Wem gehört das Tier? Manage Haustiere und lass dir Informationen mit schwebenden Labels oder im Chat anzeigen!"
 version-command-enabled: "Plugin aktiviert:"
 
 #============================================================#

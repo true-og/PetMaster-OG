@@ -16,9 +16,8 @@ configuration-reload-failed: "Virheitä ladatessa asetustiedostoja. Tarkista lok
 # Related to other plugin commands.
 petmaster-disabled: "PetMaster poistettu käytöstä seuraavaan lataukseen tai /petm enable asti."
 petmaster-enabled: "PetMaster otettu käyttöön."
-petmaster-hologram: "Lemmikin omistaa "
+petmaster-hover: "Lemmikin omistaa <gold><owner></gold>"
 petmaster-chat: "Lemmikin omistaa "
-petmaster-action-bar: "Lemmikin omistaa "
 petmaster-health: "Elämä: "
 player-offline: "Annettu pelaaja ei ole paikalla!"
 cannot-change-to-yourself: "Et voi vaihtaa omistajaa itseksesi!"
@@ -51,7 +50,7 @@ version-command-version: "Versio:"
 version-command-website: "Sivusto:"
 version-command-author: "Tekijä:"
 version-command-description: "Kuvaus:"
-version-command-description-details: "Kenen lemmikki tämä on? Hallitse lemmikkejä ja näytä omistaja hologrammeilla, toiminto palkilla tai chatti viesteillä!"
+version-command-description-details: "Kenen lemmikki tämä on? Hallitse lemmikkejä ja näytä omistaja leijuvilla nimilapuilla tai chattiviesteillä!"
 version-command-enabled: "Plugin käynnistetty:"
 
 #============================================================#

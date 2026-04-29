@@ -52,13 +52,14 @@ repositories {
 /* ---------------------- Java project deps ---------------------------- */
 dependencies {
     compileOnly("org.purpurmc.purpur:purpur-api:1.19.4-R0.1-SNAPSHOT") // Declare Purpur API version to be packaged.
-    compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.9") // Import DecentHolograms API.
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7") // Import Vault API.
     implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Import Adventure Platform API.
     implementation("net.kyori:adventure-text-minimessage:4.13.1") // Import MiniMessage API.
     implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Import verbose Minimessage API.
     implementation(project(":libs:MCShared-OG")) // Import TrueOG Network MCShared-OG API (from source).
     compileOnlyApi(project(":libs:Utilities-OG")) // Import TrueOG Network Utilities-OG Java API (from source).
+    compileOnlyApi(project(":libs:DiamondBank-OG")) {
+        attributes { attribute(kotlinAttribute, true) }
+    } // Import TrueOG network DiamondBank-OG Kotlin API (from source).
 }
 
 apply(from = "eclipse.gradle.kts") // Import eclipse classpath support script.
@@ -73,7 +74,7 @@ tasks.withType<AbstractArchiveTask>().configureEach { // Ensure reproducible .ja
 tasks.shadowJar {
     isEnableRelocation = true
     relocationPrefix = shadowPrefix
-    archiveClassifier.set("") // Use empty String instead of null.
+    archiveClassifier.set("") // Use empty string instead of null.
     minimize()
 }
 

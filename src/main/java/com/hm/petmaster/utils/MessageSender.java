@@ -14,7 +14,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class MessageSender {
 
@@ -25,13 +24,6 @@ public class MessageSender {
 
         this.plugin = plugin;
         miniMessage = MiniMessage.miniMessage();
-
-    }
-
-    public String parseMessageToString(String key, TagResolver... tagResolvers) {
-
-        return LegacyComponentSerializer.builder().useUnusualXRepeatedCharacterHexFormat().build()
-                .serialize(parseMessage(plugin.getPluginLang().getString(key), tagResolvers));
 
     }
 
@@ -48,13 +40,6 @@ public class MessageSender {
 
         final Audience audience = plugin.adventure().player(player);
         audience.sendMessage(component);
-
-    }
-
-    public void sendComponentToActionBar(Player player, Component component) {
-
-        final Audience audience = plugin.adventure().player(player);
-        audience.sendActionBar(component);
 
     }
 
@@ -75,19 +60,6 @@ public class MessageSender {
 
         final Audience audience = plugin.adventure().sender(sender);
         sendMessage(audience, key, tagResolvers);
-
-    }
-
-    public void sendActionBar(Audience audience, String key, TagResolver... tagResolvers) {
-
-        audience.sendActionBar(parseMessage(plugin.getPluginLang().getString(key), tagResolvers));
-
-    }
-
-    public void sendActionBar(Player player, String key, TagResolver... tagResolvers) {
-
-        final Audience audience = plugin.adventure().player(player);
-        sendActionBar(audience, key, tagResolvers);
 
     }
 

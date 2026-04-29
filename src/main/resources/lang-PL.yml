@@ -16,9 +16,8 @@ configuration-reload-failed: "Wystąpił błąd podczas ładowania konfiguracji.
 # Related to other plugin commands.
 petmaster-disabled: "Wyłączono PetMaster do następnego restaru lub /petm enable."
 petmaster-enabled: "Włączono PetMaster."
-petmaster-hologram: "Właściciel: "
+petmaster-hover: "Właściciel: <gold><owner></gold>"
 petmaster-chat: "Właściciel: "
-petmaster-action-bar: "Właściciel: "
 petmaster-health: "Zdrowie: "
 player-offline: "Wyznaczony gracz nie jest online!"
 cannot-change-to-yourself: "Nie możesz zmienić właściciela na siebie!"
@@ -51,7 +50,7 @@ version-command-version: "Wersja:"
 version-command-website: "Strona:"
 version-command-author: "Autor:"
 version-command-description: "Opis:"
-version-command-description-details: "Czyje to zwierzę? Zarządzaj zwierzętami domowymi i wyświetlaj informacje za pomocą hologramów, paska akcji lub wiadomości na czacie!"
+version-command-description-details: "Czyje to zwierzę? Zarządzaj zwierzętami domowymi i wyświetlaj informacje za pomocą etykiet lub wiadomości na czacie!"
 version-command-enabled: "Plugin jest aktywny:"
 
 #============================================================#

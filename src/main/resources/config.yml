@@ -18,16 +18,13 @@
 # Enable or disable chat messages when right-clicking on a pet.
 chatMessage: true
 
-# Enable or disable hologram messages when right-clicking on a pet (requires DecentHolograms).
-hologramMessage: false
+# Enable or disable armor stand hover labels when looking at a pet.
+hoverMessage: true
 
-# Enable or disable action bar messages when right-clicking on a pet.
-actionBarMessage: false
+# Maximum range in blocks for detecting a looked-at pet.
+hoverRange: 8.0
 
-# Duration of the hologram, in server ticks (20 ticks = 1 second).
-hologramDuration: 50
-
-# Show health next to owner in chat and action bar messages (not holograms).
+# Show health next to owner in chat messages.
 showHealth: true
 
 # Check for update on plugin launch and notify when an OP joins the game.
@@ -39,10 +36,7 @@ languageFileName: 'lang.yml'
 # Enable or disable showing ownership information for a player's own pets.
 displayToOwner: true
 
-# Price of the /petm setowner command (requires Vault, not charged if petmaster.admin permission).
-changeOwnerPrice: 0
-
-# Price of the /petm free command (requires Vault, not charged if petmaster.admin permission).
+# Price of the /petm free command in DiamondBank-OG shards (not charged if petmaster.admin permission).
 freePetPrice: 0
 
 # Take dogs into account.
