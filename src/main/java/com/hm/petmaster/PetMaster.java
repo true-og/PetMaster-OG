@@ -14,7 +14,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import com.hm.mcshared.file.CommentedYamlConfiguration;
 import com.hm.petmaster.command.EnableDisableCommand;
@@ -37,7 +36,6 @@ import com.hm.petmaster.listener.PlayerQuitListener;
 import com.hm.petmaster.listener.PlayerTameListener;
 import com.hm.petmaster.utils.MessageSender;
 
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.trueog.diamondbankog.api.DiamondBankAPIJava;
@@ -90,7 +88,6 @@ public class PetMaster extends JavaPlugin {
     private PetSkillCommand petSkillCommand;
 
     // Messaging System.
-    private BukkitAudiences adventure;
     private MessageSender messageSender;
 
     // Plugin instance.
@@ -98,18 +95,6 @@ public class PetMaster extends JavaPlugin {
 
     // DiamondBank-OG Economy.
     private static DiamondBankAPIJava diamondBankAPI;
-
-    public @NotNull BukkitAudiences adventure() {
-
-        if (this.adventure == null) {
-
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-
-        }
-
-        return this.adventure;
-
-    }
 
     public static DiamondBankAPIJava getDiamondBankAPI() {
 
@@ -145,8 +130,7 @@ public class PetMaster extends JavaPlugin {
         // Assign the active instance of DiamondBank-OG to the API handler.
         diamondBankAPI = provider.getProvider();
 
-        // Initializing the Messaging System
-        this.adventure = BukkitAudiences.create(this);
+        // Initializing the Messaging System (Purpur provides Adventure natively).
         this.messageSender = new MessageSender(this);
 
         getLogger().info("Server version..." + Bukkit.getServer().getBukkitVersion());
@@ -311,14 +295,6 @@ public class PetMaster extends JavaPlugin {
 
             petOwnerLabelListener.shutdown();
             petOwnerLabelListener = null;
-
-        }
-
-        // Closing Adventure API
-        if (this.adventure != null) {
-
-            this.adventure.close();
-            this.adventure = null;
 
         }
 

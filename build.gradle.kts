@@ -52,9 +52,9 @@ repositories {
 /* ---------------------- Java project deps ---------------------------- */
 dependencies {
     compileOnly("org.purpurmc.purpur:purpur-api:1.19.4-R0.1-SNAPSHOT") // Declare Purpur API version to be packaged.
-    implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Import Adventure Platform API.
-    implementation("net.kyori:adventure-text-minimessage:4.13.1") // Import MiniMessage API.
-    implementation("net.kyori:adventure-platform-bukkit:4.3.2") // Import verbose Minimessage API.
+    compileOnly(
+        "net.kyori:adventure-text-minimessage:4.13.1"
+    ) // MiniMessage API (provided by Purpur at runtime - do NOT shade/relocate).
     implementation(project(":libs:MCShared-OG")) // Import TrueOG Network MCShared-OG API (from source).
     compileOnlyApi(project(":libs:Utilities-OG")) // Import TrueOG Network Utilities-OG Java API (from source).
     compileOnlyApi(project(":libs:DiamondBank-OG")) {

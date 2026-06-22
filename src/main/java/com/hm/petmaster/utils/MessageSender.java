@@ -38,8 +38,7 @@ public class MessageSender {
 
     public void sendComponent(Player player, Component component) {
 
-        final Audience audience = plugin.adventure().player(player);
-        audience.sendMessage(component);
+        player.sendMessage(component);
 
     }
 
@@ -51,29 +50,25 @@ public class MessageSender {
 
     public void sendMessage(Player player, String key, TagResolver... tagResolvers) {
 
-        final Audience audience = plugin.adventure().player(player);
-        sendMessage(audience, key, tagResolvers);
+        sendMessage((Audience) player, key, tagResolvers);
 
     }
 
     public void sendMessage(CommandSender sender, String key, TagResolver... tagResolvers) {
 
-        final Audience audience = plugin.adventure().sender(sender);
-        sendMessage(audience, key, tagResolvers);
+        sendMessage((Audience) sender, key, tagResolvers);
 
     }
 
     public void sendNewLine(CommandSender sender, boolean sendPrefix) {
 
-        final Audience audience = plugin.adventure().sender(sender);
-
         if (sendPrefix) {
 
-            sendMessage(audience, "petmaster-prefix");
+            sendMessage((Audience) sender, "petmaster-prefix");
 
         } else {
 
-            audience.sendMessage(Component.newline());
+            sender.sendMessage(Component.newline());
 
         }
 
