@@ -4,7 +4,7 @@ version: '${version}'
 author: DarkPyves
 depend: [DiamondBank-OG, Utilities-OG]
 description: Manage pets and display useful information via hover labels or chat messages!
-website: https://github.com/true-og/PetMaster-OG
+website: https://git.trueog.net/trueog/PetMaster-OG
 api-version: '${apiVersion}'
 commands:
   petm:
