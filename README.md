@@ -27,7 +27,7 @@ PetMaster still does the core PetMaster job: players can identify pet owners, tr
 
 Ensure you have JDK 17 installed, then run:
 ````
-git clone https://github.com/true-og/PetMaster-OG
+git clone https://git.trueog.net/trueog/PetMaster-OG
 cd PetMaster-OG
 ./gradlew build
 ````
